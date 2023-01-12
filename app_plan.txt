@@ -62,3 +62,15 @@ Staf interface functions
 -id of book
 
 
+//files
+main file 
+-all controls here
+
+system
+-telling what to do, telling main file how much and what controls are needed
+
+database
+-functions for operating with database
+
+
+
