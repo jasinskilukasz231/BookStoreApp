@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace BookStoreApp
 {
-    public partial class Form1 : Form
+    public partial class WindowFrame : Form
     {
-        public Form1()
+        public WindowFrame()
         {
             InitializeComponent();
         }

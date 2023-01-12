@@ -1,0 +1,11 @@
+C:\Users\jasin\Desktop\BookStoreApp\bin\Debug\BookStoreApp.exe.config
+C:\Users\jasin\Desktop\BookStoreApp\bin\Debug\BookStoreApp.exe
+C:\Users\jasin\Desktop\BookStoreApp\bin\Debug\BookStoreApp.pdb
+C:\Users\jasin\Desktop\BookStoreApp\obj\Debug\BookStoreApp.csproj.AssemblyReference.cache
+C:\Users\jasin\Desktop\BookStoreApp\obj\Debug\BookStoreApp.csproj.SuggestedBindingRedirects.cache
+C:\Users\jasin\Desktop\BookStoreApp\obj\Debug\BookStoreApp.WindowFrame.resources
+C:\Users\jasin\Desktop\BookStoreApp\obj\Debug\BookStoreApp.Properties.Resources.resources
+C:\Users\jasin\Desktop\BookStoreApp\obj\Debug\BookStoreApp.csproj.GenerateResource.cache
+C:\Users\jasin\Desktop\BookStoreApp\obj\Debug\BookStoreApp.csproj.CoreCompileInputs.cache
+C:\Users\jasin\Desktop\BookStoreApp\obj\Debug\BookStoreApp.exe
+C:\Users\jasin\Desktop\BookStoreApp\obj\Debug\BookStoreApp.pdb
