@@ -1,0 +1,64 @@
+book store app
+c# winforms sql poor interface
+
+2 states of the application
+1 - customer interface
+People can create account and order book
+2 - staf interface
+Workers can manage the app.
+
+////////////////////////////////
+Customer interface functions:
+-creating the account
+-buying books
+-loaning books
+-checking order/loan status on the account
+-see notification about loaned books
+-searching books by name, or keywords(tags)
+
+
+Staf interface functions
+-adding/removing books to the store
+-checking amount of books in shop
+-checking informations about loaned books
+-sending notification about returning books to customer
+
+
+
+//DATABASE
+1.books
+-id
+-title
+-year
+-number of pages
+-price
+-possible to loan
+-id of tags
+2.customers
+-id
+-name
+-last name
+-email
+-phone
+3.orders
+-id
+-id of the customer
+-id of the book
+-date of order
+-status
+
+4.loans
+-id
+-id of customer
+-id of book
+-date of loan
+-date of return time
+5.tag name
+-id
+-name
+6.tags 
+-id
+-id of tag
+-id of book
+
+
