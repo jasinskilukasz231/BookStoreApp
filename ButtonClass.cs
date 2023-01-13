@@ -10,23 +10,20 @@ using System.Windows.Forms;
 
 public class ButtonClass
 {
-    int x, y, width, height;
-    string t;
-    Button button = new Button();
-
-    button.Left=x;
-    button.Top=y;
-    button.Width=widht;
-    button.Height=height;
-    button.Text=t;
-    Controls.Add(button);
+    Button button;
+    
+    public Button GetObject()
+    {
+        return button;
+    }
 
     ButtonClass(int pos_x, int pos_y, int width, int height, string text) 
     {
-        x=pos_x;
-        y=pos_y;
-        width=width;
-        height=height;
-        t=text;
+        button = new Button();
+        button.Left=pos_x;
+        button.Top=pos_y;
+        button.Width=widht;
+        button.Height=height;
+        button.Text=text;
     }
 }
