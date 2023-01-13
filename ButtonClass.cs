@@ -9,12 +9,12 @@ public class ButtonClass
         return button;
     }
 
-    ButtonClass(int pos_x, int pos_y, int width, int height, string text) 
+    public ButtonClass(int pos_x, int pos_y, int width, int height, string text) 
     {
         button = new Button();
-        button.Left=pos_x;
-        button.Top=pos_y;
-        button.Width=widht;
+        button.Left = pos_x - width / 2;
+        button.Top = pos_y - height / 2;
+        button.Width=width;
         button.Height=height;
         button.Text=text;
     }
