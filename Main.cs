@@ -19,16 +19,15 @@ namespace BookStoreApp
         //2->starting screen
         //3->register screen
 
-        StartingScreen startingScreen = new StartingScreen();
-        RegisterScreen registerScreen = new RegisterScreen();
+        Screens.StartingScreen startingScreen = new Screens.StartingScreen();
+        Screens.RegisterScreen registerScreen = new Screens.RegisterScreen();
+        Screens.CustomerAccountScreen customerAccountScreen = new Screens.CustomerAccountScreen();
 
         Timer appTimer = new Timer();
         public WindowFrame()
         {
             InitResources();
             InitializeComponent();
-            InitStartingScreen();
-            ShowStartingScreen();
         }
         private void InitResources()
         {
@@ -43,29 +42,62 @@ namespace BookStoreApp
                 case 1: //inits
                     InitStartingScreen();
                     InitRegisterScreen();
-                    //ShowStartingScreen();
-                    //HideRegisterScreen();
+                    InitCustomerAccount();
+                    ShowStartingScreen();
+                    HideRegisterScreen();
+                    HideCustomerAccount();
                     whatToRender = 0;
                     break;
                 case 2: //show starting screen
-                    //ShowStartingScreen();
-                    //HideRegisterScreen();
+                    ShowStartingScreen();
+                    HideRegisterScreen();
                     whatToRender = 0;
                     break;
                 case 3: //show register screen
-                    //ShowRegisterScreen();
-                    //HideStartingScreen();
+                    ShowRegisterScreen();
+                    HideStartingScreen();
+                    whatToRender = 0;
+                    break;
+                case 4:
+                    HideStartingScreen();
+                    ShowCustomerAccount();
                     whatToRender = 0;
                     break;
                 default: //0->nothing
-
-                    if (startingScreen.StartingScreenRegisterButtonPressed==true)
+                    if (startingScreen.startingScreenRegisterButtonPressed==true)
                     {
                         whatToRender = 3;
-                        startingScreen.StartingScreenRegisterButtonPressed = false; 
+                        startingScreen.startingScreenRegisterButtonPressed = false; 
+                    }
+                    if(registerScreen.registerScreenRegisterButtonPressed==true)
+                    {
+                        registerScreen.registerScreenRegisterButtonPressed = false;
+                        MessageBox.Show("registered");
+                    }
+                    if (registerScreen.registerScreenShortTextWarning == true) //register screen text too short
+                    {
+                        registerScreen.registerScreenShortTextWarning = false;
+                        MessageBox.Show("Please enter all required data", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    if (registerScreen.registerScreenWrongPasswordWarning == true) 
+                    {
+                        registerScreen.registerScreenWrongPasswordWarning = false;
+                        MessageBox.Show("Password or login is too long or too short", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    if(registerScreen.registerScreenLoginTaken==true)
+                    {
+                        MessageBox.Show("Your login is taken", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+
+                    }
+                    if(startingScreen.logged==true)
+                    {
+                        startingScreen.logged = false;
+                        whatToRender = 4;
                     }
                     break;
-
             }
         }
         private void InitStartingScreen()
@@ -121,6 +153,12 @@ namespace BookStoreApp
             Controls.Add(registerScreen.RegisterScreenSexLabel.GetObject());
             Controls.Add(registerScreen.RegisterScreenLoginLabel.GetObject());
             Controls.Add(registerScreen.RegisterScreenPasswordLabel.GetObject());
+            Controls.Add(registerScreen.RegisterScreenManLabel.GetObject());
+            Controls.Add(registerScreen.RegisterScreenWomanLabel.GetObject());
+            Controls.Add(registerScreen.RegisterScreenOtherLabel.GetObject());
+            Controls.Add(registerScreen.registerScreenOtherCheckBox.GetObject());
+            Controls.Add(registerScreen.registerScreenManCheckBox.GetObject());
+            Controls.Add(registerScreen.registerScreenWomanCheckBox.GetObject());
         }
         private void ShowRegisterScreen()
         {
@@ -140,6 +178,12 @@ namespace BookStoreApp
             registerScreen.RegisterScreenSexLabel.GetObject().Visible = true;
             registerScreen.RegisterScreenLoginLabel.GetObject().Visible = true;
             registerScreen.RegisterScreenPasswordLabel.GetObject().Visible = true;
+            registerScreen.registerScreenOtherCheckBox.GetObject().Visible = true;
+            registerScreen.registerScreenManCheckBox.GetObject().Visible = true;
+            registerScreen.registerScreenWomanCheckBox.GetObject().Visible = true;
+            registerScreen.RegisterScreenManLabel.GetObject().Visible = true;
+            registerScreen.RegisterScreenWomanLabel.GetObject().Visible = true;
+            registerScreen.RegisterScreenOtherLabel.GetObject().Visible = true;
         }
         private void HideRegisterScreen()
         {
@@ -159,6 +203,37 @@ namespace BookStoreApp
             registerScreen.RegisterScreenSexLabel.GetObject().Visible = false;
             registerScreen.RegisterScreenLoginLabel.GetObject().Visible = false;
             registerScreen.RegisterScreenPasswordLabel.GetObject().Visible = false;
+            registerScreen.registerScreenOtherCheckBox.GetObject().Visible = false;
+            registerScreen.registerScreenManCheckBox.GetObject().Visible = false;
+            registerScreen.registerScreenWomanCheckBox.GetObject().Visible = false;
+            registerScreen.RegisterScreenManLabel.GetObject().Visible = false;
+            registerScreen.RegisterScreenWomanLabel.GetObject().Visible = false;
+            registerScreen.RegisterScreenOtherLabel.GetObject().Visible = false;
+        }
+        private void InitCustomerAccount()
+        {
+            customerAccountScreen.CreateCustomerAccountScreen(win_x, win_y);
+            Controls.Add(customerAccountScreen.cartButton.GetObject());
+            Controls.Add(customerAccountScreen.settingsButton.GetObject());
+            Controls.Add(customerAccountScreen.logOutButton.GetObject());
+            Controls.Add(customerAccountScreen.searchButton.GetObject());
+            Controls.Add(customerAccountScreen.searchTextBox.GetObject());
+        }
+        private void ShowCustomerAccount()
+        {
+            customerAccountScreen.cartButton.GetObject().Visible = true;
+            customerAccountScreen.settingsButton.GetObject().Visible = true;
+            customerAccountScreen.logOutButton.GetObject().Visible = true;
+            customerAccountScreen.searchButton.GetObject().Visible = true;
+            customerAccountScreen.searchTextBox.GetObject().Visible = true;
+        }
+        private void HideCustomerAccount()
+        {
+            customerAccountScreen.cartButton.GetObject().Visible = false;
+            customerAccountScreen.settingsButton.GetObject().Visible = false;
+            customerAccountScreen.logOutButton.GetObject().Visible = false;
+            customerAccountScreen.searchButton.GetObject().Visible = false;
+            customerAccountScreen.searchTextBox.GetObject().Visible = false;
         }
     }
 }
