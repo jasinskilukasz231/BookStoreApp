@@ -46,9 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ButtonClass.cs" />
+    <Compile Include="Controls\ButtonClass.cs" />
+    <Compile Include="Controls\CheckBoxClass.cs" />
     <Compile Include="Database.cs" />
-    <Compile Include="LabelClass.cs" />
+    <Compile Include="Controls\LabelClass.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -57,8 +58,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SystemApp.cs" />
-    <Compile Include="TextBoxClass.cs" />
+    <Compile Include="Screens\BookInfoScreen.cs" />
+    <Compile Include="Screens\CustomerAccountScreen.cs" />
+    <Compile Include="Screens\RegisterScreen.cs" />
+    <Compile Include="Screens\Settings.cs" />
+    <Compile Include="Screens\StartingScreen.cs" />
+    <Compile Include="Controls\TextBoxClass.cs" />
     <Compile Include="Utilities.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>

@@ -13,5 +13,7 @@ static class UtilitiesClass
     static FontFamily fontFamily = new FontFamily("Arial");
     public static Font arial12Regular = new Font(fontFamily, 12, FontStyle.Regular);
     public static Font arial12Bold = new Font(fontFamily, 12, FontStyle.Bold);
+
+
     
 }
