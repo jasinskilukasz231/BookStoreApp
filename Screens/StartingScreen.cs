@@ -8,7 +8,7 @@ namespace BookStoreApp.Screens
         public bool startingScreenRegisterButtonPressed = false;
         public bool startingScreenLoginButtonPressed = false;
         public bool startingScreenStafLoginButtonPressed = false;
-        public bool logged = false;
+        public bool logged = true;
         public ButtonClass StartingScreenRegisterButton { get; set; }
         public ButtonClass StartingScreenStafLoginButton { get; set; }
         public ButtonClass StartingScreenLoginButton { get; set; }

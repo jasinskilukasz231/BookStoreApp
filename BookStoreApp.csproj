@@ -61,7 +61,7 @@
     <Compile Include="Screens\BookInfoScreen.cs" />
     <Compile Include="Screens\CustomerAccountScreen.cs" />
     <Compile Include="Screens\RegisterScreen.cs" />
-    <Compile Include="Screens\Settings.cs" />
+    <Compile Include="Screens\SettingsScreen.cs" />
     <Compile Include="Screens\StartingScreen.cs" />
     <Compile Include="Controls\TextBoxClass.cs" />
     <Compile Include="Utilities.cs" />
