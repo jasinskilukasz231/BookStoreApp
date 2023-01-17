@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookStoreApp.Screens
 {
-    internal class Settings
+    internal class SettingsScreen
     {
     }
 }

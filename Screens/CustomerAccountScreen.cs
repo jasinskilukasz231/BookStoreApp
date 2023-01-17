@@ -19,28 +19,27 @@ namespace BookStoreApp.Screens
         public LabelClass bookPriceLabel { get; set; }
         public void CreateCustomerAccountScreen(int win_x, int win_y)
         {
-            cartButton = new ButtonClass(win_x - 80, 60, 150, 50, "");
-
+            cartButton = new ButtonClass(win_x - 150, 30, 50, 50, "");
             cartButton.GetObject().Click += new EventHandler(CartButtonClick);
 
 
-            settingsButton = new ButtonClass(win_x - 60, 80, 50, 50, "");
-
+            settingsButton = new ButtonClass(win_x - 100, 30, 50, 50, "");
             settingsButton.GetObject().Click += new EventHandler(settingsButtonClick);
 
 
-            searchButton = new ButtonClass(win_x/2, 60, 50, 50, "");
-
+            searchButton = new ButtonClass(win_x/2, 30, 50, 50, "");
             searchButton.GetObject().Click += new EventHandler(searchButtonClick);
 
-
-            searchTextBox = new TextBoxClass(win_x / 2 - 120, 60, 200);
-            searchTextBox.GetObject().Font = UtilitiesClass.arial12Regular;
-
-
-            logOutButton = new ButtonClass(win_x - 60, 150, 50, 50, "");
-
+            logOutButton = new ButtonClass(win_x - 50, 30, 50, 50, "");
             logOutButton.GetObject().Click += new EventHandler(logOutButtonClick);
+
+            cartButton.GetObject().BackgroundImage = UtilitiesClass.images["cart"];
+            logOutButton.GetObject().BackgroundImage = UtilitiesClass.images["logout"];
+            searchButton.GetObject().BackgroundImage = UtilitiesClass.images["search"];
+            settingsButton.GetObject().BackgroundImage = UtilitiesClass.images["settings"];
+
+            searchTextBox = new TextBoxClass(win_x / 2 - 130, 15, 200);
+            searchTextBox.GetObject().Font = UtilitiesClass.arial12Regular;
         }
         private void CartButtonClick(object sender, EventArgs e)
         {

@@ -42,10 +42,11 @@ namespace BookStoreApp
                 case 1: //inits
                     InitStartingScreen();
                     InitRegisterScreen();
-                    InitCustomerAccount();
+                    UtilitiesClass.LoadImages();
+                    InitCustomerAccountScreen();
                     ShowStartingScreen();
                     HideRegisterScreen();
-                    HideCustomerAccount();
+                    HideCustomerAccountScreen();
                     whatToRender = 0;
                     break;
                 case 2: //show starting screen
@@ -60,7 +61,7 @@ namespace BookStoreApp
                     break;
                 case 4:
                     HideStartingScreen();
-                    ShowCustomerAccount();
+                    ShowCustomerAccountScreen();
                     whatToRender = 0;
                     break;
                 default: //0->nothing
@@ -96,6 +97,25 @@ namespace BookStoreApp
                     {
                         startingScreen.logged = false;
                         whatToRender = 4;
+                    }
+                    //customerAccount screen
+                    if (customerAccountScreen.logOutButtonPressed == true)
+                    {
+                        HideCustomerAccountScreen();
+                        ShowStartingScreen();
+                        customerAccountScreen.logOutButtonPressed = false;
+                    }
+                    if (customerAccountScreen.settingsButtonPressed == true)
+                    {
+                        HideCustomerAccountScreen();
+                        ShowSettingsScreen();
+                        customerAccountScreen.settingsButtonPressed = false;
+                    }
+                    if (customerAccountScreen.cartButtonPressed == true) 
+                    {
+                        customerAccountScreen.cartButtonPressed = true;
+                        HideCustomerAccountScreen();
+                        ShowCartScreen();
                     }
                     break;
             }
@@ -210,7 +230,7 @@ namespace BookStoreApp
             registerScreen.RegisterScreenWomanLabel.GetObject().Visible = false;
             registerScreen.RegisterScreenOtherLabel.GetObject().Visible = false;
         }
-        private void InitCustomerAccount()
+        private void InitCustomerAccountScreen()
         {
             customerAccountScreen.CreateCustomerAccountScreen(win_x, win_y);
             Controls.Add(customerAccountScreen.cartButton.GetObject());
@@ -219,7 +239,7 @@ namespace BookStoreApp
             Controls.Add(customerAccountScreen.searchButton.GetObject());
             Controls.Add(customerAccountScreen.searchTextBox.GetObject());
         }
-        private void ShowCustomerAccount()
+        private void ShowCustomerAccountScreen()
         {
             customerAccountScreen.cartButton.GetObject().Visible = true;
             customerAccountScreen.settingsButton.GetObject().Visible = true;
@@ -227,13 +247,37 @@ namespace BookStoreApp
             customerAccountScreen.searchButton.GetObject().Visible = true;
             customerAccountScreen.searchTextBox.GetObject().Visible = true;
         }
-        private void HideCustomerAccount()
+        private void HideCustomerAccountScreen()
         {
             customerAccountScreen.cartButton.GetObject().Visible = false;
             customerAccountScreen.settingsButton.GetObject().Visible = false;
             customerAccountScreen.logOutButton.GetObject().Visible = false;
             customerAccountScreen.searchButton.GetObject().Visible = false;
             customerAccountScreen.searchTextBox.GetObject().Visible = false;
+        }
+        private void InitSettingsScreen()
+        {
+
+        }
+        private void ShowSettingsScreen()
+        {
+
+        }
+        private void HideSettingsScreen()
+        {
+
+        }
+        private void InitCartScreen()
+        {
+
+        }
+        private void ShowCartScreen()
+        {
+
+        }
+        private void HideCartScreen()
+        {
+
         }
     }
 }
