@@ -8,7 +8,6 @@ namespace BookStoreApp.Screens
         public bool settingsButtonPressed { get; set; } 
         public bool searchButtonPressed { get; set; }
         public bool logOutButtonPressed { get; set; }
-
         public ButtonClass cartButton { get; set; }
         public ButtonClass settingsButton { get; set; } 
         public ButtonClass searchButton { get; set; } 
@@ -52,10 +51,58 @@ namespace BookStoreApp.Screens
         private void searchButtonClick(object sender, EventArgs e)
         {
             searchButtonPressed = true;
+            SearchBook(searchTextBox.GetObject().Text);
         }
         private void logOutButtonClick(object sender, EventArgs e)
         {
             logOutButtonPressed = true;
+        }
+        private string SearchBook(string tags)
+        {
+            //function based on string which contains tags or names, shows books containing this tag
+            //function returns id of books that should be shown
+
+            //searching assumptions:
+            //1.user can find book by name or part of the name
+            //2.user can find book by tag or part of the tag
+
+            //example string: morderstwo, salems lot, thedavincicode, XXI, book""12(()),
+
+            string tagsCleared = ClearString(tags);
+
+            
+            return tags;
+        }
+        private string ClearString(string s)
+        {
+            //isolating key words from the string:
+            //adding + as a seperator
+            //lowering all signs
+            //removing not letters and not numbers
+
+            string new_s = "";
+            string stringReady = "";
+            foreach (char i in s)
+            {
+                if (i == ' ') new_s += "+";
+                else new_s += Char.ToLower(i);
+            }
+            for (int i = 0; i < new_s.Length; i++)
+            {
+                if (new_s[i] != '+')
+                {
+                    if (Char.IsLetterOrDigit(new_s[i]))
+                    {
+                        stringReady += new_s[i];
+                    }
+                }
+                else
+                {
+                    stringReady += "+";
+                }
+            }
+
+            return stringReady;
         }
     }
     
