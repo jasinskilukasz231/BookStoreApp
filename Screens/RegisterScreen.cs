@@ -4,10 +4,7 @@ namespace BookStoreApp.Screens
 {
     public class RegisterScreen
     {
-        public bool registerScreenRegisterButtonPressed = false;
-        public bool registerScreenShortTextWarning = false;
-        public bool registerScreenWrongPasswordWarning = false;
-        public bool registerScreenLoginTaken = false;
+        public bool registerButtonPressed = false;
         public ButtonClass RegisterScreenRegisterButton { get; set; }
         public TextBoxClass RegisterScreenNameTextBox { get; set; }
         public TextBoxClass RegisterScreenLastNameTextBox { get; set; }
@@ -27,7 +24,6 @@ namespace BookStoreApp.Screens
         public LabelClass RegisterScreenOtherLabel { get; set; }
         public LabelClass RegisterScreenManLabel { get; set; }
         public LabelClass RegisterScreenWomanLabel { get; set; }
-
         public CheckBoxClass registerScreenManCheckBox { get; set; }
         public CheckBoxClass registerScreenWomanCheckBox { get; set; }
         public CheckBoxClass registerScreenOtherCheckBox { get; set; }
@@ -125,46 +121,7 @@ namespace BookStoreApp.Screens
         }
         private void RegisterScreenRegisterButtonClick(object sender, EventArgs e)
         {
-            //jezeli za nie ma tekstu wyswietl 1
-            //jezeli tekst ok nie wyswietlaj 1 wyswietl 2
-            bool text_ok = false;
-            bool password_login_length = false;
-            bool login_taken = false;
-            if (RegisterScreenNameTextBox.GetObject().Text.Length > 2 &&
-                RegisterScreenLastNameTextBox.GetObject().Text.Length > 2 &&
-                RegisterScreenEmailTextBox.GetObject().Text.Length > 2 &&
-                RegisterScreenPhoneTextBox.GetObject().Text.Length > 2 &&
-                RegisterScreenAddressTextBox.GetObject().Text.Length > 2 &&
-                RegisterScreenLoginTextBox.GetObject().Text.Length > 2 &&
-                RegisterScreenPasswordTextBox.GetObject().Text.Length > 2 &&
-                (registerScreenManCheckBox.GetObject().Checked == true ||
-                registerScreenWomanCheckBox.GetObject().Checked == true ||
-                registerScreenOtherCheckBox.GetObject().Checked == true))
-            {
-                text_ok = true;
-            }
-            else registerScreenShortTextWarning = true;
-
-            if (RegisterScreenPasswordTextBox.GetObject().Text.Length > 5 &&
-                RegisterScreenPasswordTextBox.GetObject().Text.Length < 20 &&
-                RegisterScreenLoginTextBox.GetObject().Text.Length > 5 &&
-                RegisterScreenLoginTextBox.GetObject().Text.Length < 20)
-            {
-                password_login_length = true;
-            }
-            else
-            {
-                registerScreenWrongPasswordWarning = true;
-                registerScreenShortTextWarning = false;
-            }
-
-            //if ()login_taken = true;
-            //else login_taken = false;
-
-            if (text_ok == true && password_login_length == true && login_taken == false) //text length/
-            {
-                registerScreenRegisterButtonPressed = true;
-            }
+            registerButtonPressed = true;
         }
         private void RegisterScreenManCheckBoxClick(object sender, EventArgs e)
         {
@@ -204,6 +161,72 @@ namespace BookStoreApp.Screens
                 registerScreenManCheckBox.GetObject().Enabled = true;
                 registerScreenWomanCheckBox.GetObject().Enabled = true;
             }
+        }
+        public string Register()
+        {
+            if (RegisterScreenNameTextBox.GetObject().Text.Length < 2 ||
+                RegisterScreenLastNameTextBox.GetObject().Text.Length < 2 ||
+                RegisterScreenEmailTextBox.GetObject().Text.Length < 2 ||
+                RegisterScreenPhoneTextBox.GetObject().Text.Length < 2 ||
+                RegisterScreenAddressTextBox.GetObject().Text.Length < 2 ||
+                RegisterScreenLoginTextBox.GetObject().Text.Length < 2 ||
+                RegisterScreenPasswordTextBox.GetObject().Text.Length < 2 ||
+                (registerScreenManCheckBox.GetObject().Checked == false &&
+                registerScreenWomanCheckBox.GetObject().Checked == false &&
+                registerScreenOtherCheckBox.GetObject().Checked == false))
+            {
+                goto exit1;
+            }
+
+            if (RegisterScreenPasswordTextBox.GetObject().Text.Length < 5 ||
+                RegisterScreenPasswordTextBox.GetObject().Text.Length > 20 ||
+                RegisterScreenLoginTextBox.GetObject().Text.Length < 5 ||
+                RegisterScreenLoginTextBox.GetObject().Text.Length > 20)
+            {
+                goto exit2;
+            }
+
+            string query = "SELECT id FROM customers_data WHERE login=" + UtilitiesClass.quoteSign + RegisterScreenLoginTextBox.GetObject().Text
+                + UtilitiesClass.quoteSign;
+
+            if (Database.Find(query) != null) goto exit3;
+
+            goto exit4;
+
+        exit1:
+            return "missingData";
+        exit2:
+            return "wrongPasswordLogin";
+        exit3:
+            return "loginTaken";
+        exit4:
+            string id = "NULL";
+            string name = UtilitiesClass.quoteSign + RegisterScreenNameTextBox.GetObject().Text + UtilitiesClass.quoteSign;
+            string lastName = UtilitiesClass.quoteSign + RegisterScreenLastNameTextBox.GetObject().Text + UtilitiesClass.quoteSign;
+            string email = UtilitiesClass.quoteSign + RegisterScreenEmailTextBox.GetObject().Text + UtilitiesClass.quoteSign;
+            string phone = UtilitiesClass.quoteSign + RegisterScreenPhoneTextBox.GetObject().Text + UtilitiesClass.quoteSign;
+            string address = UtilitiesClass.quoteSign + RegisterScreenAddressTextBox.GetObject().Text + UtilitiesClass.quoteSign;
+            string sex = "";
+            if (registerScreenManCheckBox.GetObject().Checked==true)
+            {
+                sex = UtilitiesClass.quoteSign + "Man" + UtilitiesClass.quoteSign;
+            }
+            else if (registerScreenWomanCheckBox.GetObject().Checked == true)
+            {
+                sex = UtilitiesClass.quoteSign + "Woman" + UtilitiesClass.quoteSign;
+            }
+            else if (registerScreenOtherCheckBox.GetObject().Checked == true)
+            {
+                sex = UtilitiesClass.quoteSign + "Other" + UtilitiesClass.quoteSign;
+            }
+            string login = UtilitiesClass.quoteSign + RegisterScreenLoginTextBox.GetObject().Text + UtilitiesClass.quoteSign;
+            string password = UtilitiesClass.quoteSign + RegisterScreenPasswordTextBox.GetObject().Text + UtilitiesClass.quoteSign;
+
+            string query1 = "INSERT INTO customers_data VALUES(" + id + ", " + name + ", " + lastName + ", " + email + ", " + phone + ", " +
+                address + ", " + sex + ", " + login + ", " + password + ")";
+            //Database.InsertInto(query1);
+
+            return "registered";
         }
     }
 }

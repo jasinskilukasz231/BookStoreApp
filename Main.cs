@@ -21,9 +21,12 @@ namespace BookStoreApp
 
         Screens.StartingScreen startingScreen = new Screens.StartingScreen();
         Screens.RegisterScreen registerScreen = new Screens.RegisterScreen();
+        Screens.RegisterInfoScreen registerInfoScreen = new Screens.RegisterInfoScreen();
         Screens.CustomerAccountScreen customerAccountScreen = new Screens.CustomerAccountScreen();
 
         Timer appTimer = new Timer();
+
+        int showInfoTimer = 0;
         public WindowFrame()
         {
             InitResources();
@@ -59,44 +62,60 @@ namespace BookStoreApp
                     HideStartingScreen();
                     whatToRender = 0;
                     break;
-                case 4:
+                case 4: //show customer account screen
                     HideStartingScreen();
                     ShowCustomerAccountScreen();
                     whatToRender = 0;
                     break;
-                default: //0->nothing
+                case 5: //info screen
+                    registerInfoScreen.infoLabel.GetObject().Visible = true;
+                    showInfoTimer++;
+                    if(showInfoTimer>=60)
+                    {
+                        whatToRender = 4;
+                        showInfoTimer = 0;
+                        registerInfoScreen.infoLabel.GetObject().Visible = false;
+                    }
+                    break;
+                default: 
+                    //starting screen
                     if (startingScreen.startingScreenRegisterButtonPressed==true)
                     {
                         whatToRender = 3;
                         startingScreen.startingScreenRegisterButtonPressed = false; 
                     }
-                    if(registerScreen.registerScreenRegisterButtonPressed==true)
-                    {
-                        registerScreen.registerScreenRegisterButtonPressed = false;
-                        MessageBox.Show("registered");
-                    }
-                    if (registerScreen.registerScreenShortTextWarning == true) //register screen text too short
-                    {
-                        registerScreen.registerScreenShortTextWarning = false;
-                        MessageBox.Show("Please enter all required data", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    if (registerScreen.registerScreenWrongPasswordWarning == true) 
-                    {
-                        registerScreen.registerScreenWrongPasswordWarning = false;
-                        MessageBox.Show("Password or login is too long or too short", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    if(registerScreen.registerScreenLoginTaken==true)
-                    {
-                        MessageBox.Show("Your login is taken", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-
-                    }
-                    if(startingScreen.logged==true)
+                    if (startingScreen.logged == true)
                     {
                         startingScreen.logged = false;
                         whatToRender = 4;
+                    }
+                    if (startingScreen.showWrongDataInfo == true)
+                    {
+                        startingScreen.showWrongDataInfo = false;
+                        startingScreen.StartingScreenWrongDataLabel.GetObject().Visible = true;
+                    }
+                    //register screen
+                    if (registerScreen.registerButtonPressed == true) 
+                    {
+                        registerScreen.registerButtonPressed = false;
+                        if(registerScreen.Register()=="missingData")
+                        {
+                            MessageBox.Show("Please enter all required data", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else if(registerScreen.Register()== "wrongPasswordLogin")
+                        {
+                            MessageBox.Show("Password or login is too long or too short", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else if (registerScreen.Register() == "loginTaken")
+                        {
+                            MessageBox.Show("Your login is taken", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else //registered
+                        {
+                            whatToRender = 5;
+                            registerInfoScreen.createInfoScreen(win_x, win_y);
+                            HideRegisterScreen();
+                        }
                     }
                     //customerAccount screen
                     if (customerAccountScreen.logOutButtonPressed == true)
@@ -152,7 +171,6 @@ namespace BookStoreApp
             startingScreen.StartingScreenTextBoxPassword.GetObject().Visible = true;
             startingScreen.StartingScreenLoginLabel.GetObject().Visible = true;
             startingScreen.StartingScreenPasswordLabel.GetObject().Visible = true;
-            startingScreen.StartingScreenWrongDataLabel.GetObject().Visible = true;
         }
         private void InitRegisterScreen()
         {
