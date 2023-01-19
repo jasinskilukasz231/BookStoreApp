@@ -6,9 +6,9 @@ namespace BookStoreApp.Screens
     public class StartingScreen
     {
         public bool startingScreenRegisterButtonPressed = false;
-        public bool startingScreenLoginButtonPressed = false;
         public bool startingScreenStafLoginButtonPressed = false;
-        public bool logged = true;
+        public bool logged = false;
+        public bool showWrongDataInfo = false;
         public ButtonClass StartingScreenRegisterButton { get; set; }
         public ButtonClass StartingScreenStafLoginButton { get; set; }
         public ButtonClass StartingScreenLoginButton { get; set; }
@@ -60,7 +60,17 @@ namespace BookStoreApp.Screens
         }
         public void StartingScreenLoginButtonClick(object sender, EventArgs e)
         {
-            startingScreenLoginButtonPressed = true;
+            string query = "SELECT id FROM customers_data WHERE login=" + UtilitiesClass.quoteSign + StartingScreenTextBoxLogin.GetObject().Text
+                + UtilitiesClass.quoteSign + " AND password=" + UtilitiesClass.quoteSign + StartingScreenTextBoxPassword.GetObject().Text + UtilitiesClass.quoteSign;
+
+            if (Database.Find(query) != null)
+            {
+                logged = true;
+            }
+            else
+            {
+                showWrongDataInfo = true;
+            }
         }
         private void StartingScreenStafLoginButtonClick(object sender, EventArgs e)
         {

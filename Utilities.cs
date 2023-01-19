@@ -19,6 +19,8 @@ static class UtilitiesClass
     private static string imagesDir = projectDir + "/Images";
     private static Bitmap cartImage, logOutImage, searchImage, settingsImage;
     public static Dictionary<string, Bitmap> images = new Dictionary<string, Bitmap>();
+
+    public static char quoteSign = Convert.ToChar(34); //quote sign for sql queries
     public static void LoadImages()
     {
         //importing images from file
