@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BookStoreApp.Screens
 {
@@ -13,9 +14,10 @@ namespace BookStoreApp.Screens
         public ButtonClass searchButton { get; set; }
         public ButtonClass logOutButton { get; set; }
         public TextBoxClass searchTextBox { get; set; }
-        public ButtonClass bookButton { get; set; }
-        public LabelClass bookLabel { get; set; }
-        public LabelClass bookPriceLabel { get; set; }
+
+        public List<ButtonClass> buttonsList = new List<ButtonClass>();
+        public List<LabelClass> labelsList = new List<LabelClass>();
+        public List<LabelClass> priceLabelsList = new List<LabelClass>();
         public void CreateCustomerAccountScreen(int win_x, int win_y)
         {
             cartButton = new ButtonClass(win_x - 150, 30, 50, 50, "");
@@ -39,6 +41,23 @@ namespace BookStoreApp.Screens
 
             searchTextBox = new TextBoxClass(win_x / 2 - 130, 15, 200);
             searchTextBox.GetObject().Font = UtilitiesClass.arial12Regular;
+
+            int topPositon = win_y - 500;
+            for (int i = 0; i < 10; i++) //10->max books shown on one page
+            {
+                ButtonClass bookButton = new ButtonClass(win_x - 300, topPositon * (1 + i), 70, 70, "");
+                bookButton.GetObject().Visible = false;
+
+                LabelClass bookLabel = new LabelClass(win_x - 200, topPositon * (1 + i), "", 300, 70);
+                bookLabel.GetObject().Visible = false;
+
+                LabelClass bookPriceLabel = new LabelClass(win_x + 100, topPositon * (1 + i), "", 300, 70);
+                bookPriceLabel.GetObject().Visible = false;
+
+                buttonsList.Add(bookButton);
+                labelsList.Add(bookLabel);
+                priceLabelsList.Add(bookPriceLabel);
+            }
         }
         private void CartButtonClick(object sender, EventArgs e)
         {
@@ -51,7 +70,7 @@ namespace BookStoreApp.Screens
         private void searchButtonClick(object sender, EventArgs e)
         {
             searchButtonPressed = true;
-            SearchBook(searchTextBox.GetObject().Text);
+            DisplayBooks(SearchBook(searchTextBox.GetObject().Text));
         }
         private void logOutButtonClick(object sender, EventArgs e)
         {
@@ -84,6 +103,34 @@ namespace BookStoreApp.Screens
             }
 
             return UtilitiesClass.RemoveSameNumbers(ids);
+        }
+        private void DisplayBooks(string ids)
+        {
+            int num = 0;
+            for (int i = 0; i < ids.Length; i++)
+            {
+                if (ids[i] == ',') num++; //counting numbers
+            }
+
+            for (int i = 0; i < 10; i++)//clearing all objects
+            {
+                buttonsList[i].GetObject().BackgroundImage = null;
+                buttonsList[i].GetObject().Visible = false;
+                labelsList[i].GetObject().Text = "";
+                labelsList[i].GetObject().Visible = false;
+                priceLabelsList[i].GetObject().Text = "";
+                priceLabelsList[i].GetObject().Visible = false;
+            }
+            for (int i = 0; i < num; i++)//displaying
+            {
+                buttonsList[i].GetObject().BackgroundImage = 
+                buttonsList[i].GetObject().Visible = true;
+                labelsList[i].GetObject().Text = 
+                labelsList[i].GetObject().Visible = true;
+                priceLabelsList[i].GetObject().Text = 
+                priceLabelsList[i].GetObject().Visible = true;
+            }
+            
         }
 
     }
