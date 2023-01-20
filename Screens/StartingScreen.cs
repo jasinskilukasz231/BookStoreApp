@@ -63,7 +63,7 @@ namespace BookStoreApp.Screens
             string query = "SELECT id FROM customers_data WHERE login=" + UtilitiesClass.quoteSign + StartingScreenTextBoxLogin.GetObject().Text
                 + UtilitiesClass.quoteSign + " AND password=" + UtilitiesClass.quoteSign + StartingScreenTextBoxPassword.GetObject().Text + UtilitiesClass.quoteSign;
 
-            if (Database.Find(query) != null)
+            if (Database.FindOneThing(query) != null)
             {
                 logged = true;
             }

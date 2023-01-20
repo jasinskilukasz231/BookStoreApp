@@ -11,7 +11,7 @@ namespace BookStoreApp
         private static MySqlCommand sqlCommand;
         private static MySqlDataReader reader;
 
-        public static string Find(string query)
+        public static string FindOneThing(string query)
         {
             sqlConnection = new MySqlConnection(connectionString);
             sqlCommand = new MySqlCommand(query, sqlConnection);
@@ -59,6 +59,37 @@ namespace BookStoreApp
             {
                 sqlConnection.Close();
                 MessageBox.Show("Query error: " + e.Message);
+            }
+        }
+        public static string FindMany(string query)
+        {
+            //finds all items
+            //adds , as a seperator
+            sqlConnection = new MySqlConnection(connectionString);
+            sqlCommand = new MySqlCommand(query, sqlConnection);
+            sqlCommand.CommandTimeout = 60;
+            try
+            {
+                string s = "";
+                sqlConnection.Open();
+                reader = sqlCommand.ExecuteReader();
+                
+                if(reader.HasRows)
+                {
+                    while(reader.Read())
+                    {
+                        s += reader.GetString(0);
+                        s += ",";
+                    }
+                }
+                sqlConnection.Close();
+                return s;
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Query error " + e);
+                sqlConnection.Close();
+                return null;
             }
         }
     }

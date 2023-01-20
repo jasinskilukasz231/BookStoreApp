@@ -33,4 +33,52 @@ static class UtilitiesClass
         images.Add("search", searchImage);    
         images.Add("settings", settingsImage);
     }
+
+    //ussefull methods
+    public static string RemoveSameNumbers(string s)
+    {
+        for (int i = 0; i < s.Length; i++)//all chars in string
+        {
+            for (int j = i + 1; j < s.Length; j++)//set begining at the current pos, to the end
+            {
+                if (s[j] == s[i])//if any sign is the same, delete it
+                {
+                    s = s.Remove(j);
+                }
+            }
+        }
+        return s;
+    }
+    public static string ClearString(string s)
+    {
+        //isolating key words from the string:
+        //adding + as a seperator
+        //lowering all signs
+        //removing not letters and not numbers
+
+        string new_s = "";
+        string stringReady = "";
+        foreach (char i in s)
+        {
+            if (i == ' ') new_s += "+";
+            else new_s += Char.ToLower(i);
+        }
+        for (int i = 0; i < new_s.Length; i++)
+        {
+            if (new_s[i] != '+')
+            {
+                if (Char.IsLetterOrDigit(new_s[i]))
+                {
+                    stringReady += new_s[i];
+                }
+            }
+            else
+            {
+                stringReady += "+";
+            }
+        }
+
+        return stringReady;
+    }
+
 }

@@ -4,16 +4,16 @@ namespace BookStoreApp.Screens
 {
     public class CustomerAccountScreen
     {
-        public bool cartButtonPressed { get; set; } 
-        public bool settingsButtonPressed { get; set; } 
+        public bool cartButtonPressed { get; set; }
+        public bool settingsButtonPressed { get; set; }
         public bool searchButtonPressed { get; set; }
         public bool logOutButtonPressed { get; set; }
         public ButtonClass cartButton { get; set; }
-        public ButtonClass settingsButton { get; set; } 
-        public ButtonClass searchButton { get; set; } 
-        public ButtonClass logOutButton { get; set; } 
+        public ButtonClass settingsButton { get; set; }
+        public ButtonClass searchButton { get; set; }
+        public ButtonClass logOutButton { get; set; }
         public TextBoxClass searchTextBox { get; set; }
-        public ButtonClass bookButton { get; set; } 
+        public ButtonClass bookButton { get; set; }
         public LabelClass bookLabel { get; set; }
         public LabelClass bookPriceLabel { get; set; }
         public void CreateCustomerAccountScreen(int win_x, int win_y)
@@ -26,7 +26,7 @@ namespace BookStoreApp.Screens
             settingsButton.GetObject().Click += new EventHandler(settingsButtonClick);
 
 
-            searchButton = new ButtonClass(win_x/2, 30, 50, 50, "");
+            searchButton = new ButtonClass(win_x / 2, 30, 50, 50, "");
             searchButton.GetObject().Click += new EventHandler(searchButtonClick);
 
             logOutButton = new ButtonClass(win_x - 50, 30, 50, 50, "");
@@ -57,7 +57,7 @@ namespace BookStoreApp.Screens
         {
             logOutButtonPressed = true;
         }
-        private string SearchBook(string tags)
+        private string SearchBook(string s)
         {
             //function based on string which contains tags or names, shows books containing this tag
             //function returns id of books that should be shown
@@ -68,42 +68,23 @@ namespace BookStoreApp.Screens
 
             //example string: morderstwo, salems lot, thedavincicode, XXI, book""12(()),
 
-            string tagsCleared = ClearString(tags);
+            string[] tags = UtilitiesClass.ClearString(s).Split('+');
+            string ids = "";
 
-            
-            return tags;
-        }
-        private string ClearString(string s)
-        {
-            //isolating key words from the string:
-            //adding + as a seperator
-            //lowering all signs
-            //removing not letters and not numbers
-
-            string new_s = "";
-            string stringReady = "";
-            foreach (char i in s)
+            foreach (var i in tags)
             {
-                if (i == ' ') new_s += "+";
-                else new_s += Char.ToLower(i);
-            }
-            for (int i = 0; i < new_s.Length; i++)
-            {
-                if (new_s[i] != '+')
-                {
-                    if (Char.IsLetterOrDigit(new_s[i]))
-                    {
-                        stringReady += new_s[i];
-                    }
-                }
-                else
-                {
-                    stringReady += "+";
-                }
+                string query = "SELECT id FROM books WHERE title LIKE(" + UtilitiesClass.quoteSign
+                    + "%" + i + "%" + UtilitiesClass.quoteSign + ")";
+                ids += Database.FindMany(query);
+                Console.WriteLine(ids);
+                //SELECT books.id FROM books, tags_name, books_tags WHERE books_tags.id_book=books.id AND books_tags.id_tag=tags_name.id
+                //AND tags_name.name LIKE(%i%)
+                string query1 = "";
+                ids += Database.FindMany(query1);
             }
 
-            return stringReady;
+            return UtilitiesClass.RemoveSameNumbers(ids);
         }
+
     }
-    
 }

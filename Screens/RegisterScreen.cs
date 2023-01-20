@@ -189,7 +189,7 @@ namespace BookStoreApp.Screens
             string query = "SELECT id FROM customers_data WHERE login=" + UtilitiesClass.quoteSign + RegisterScreenLoginTextBox.GetObject().Text
                 + UtilitiesClass.quoteSign;
 
-            if (Database.Find(query) != null) goto exit3;
+            if (Database.FindOneThing(query) != null) goto exit3;
 
             goto exit4;
 
@@ -224,7 +224,7 @@ namespace BookStoreApp.Screens
 
             string query1 = "INSERT INTO customers_data VALUES(" + id + ", " + name + ", " + lastName + ", " + email + ", " + phone + ", " +
                 address + ", " + sex + ", " + login + ", " + password + ")";
-            //Database.InsertInto(query1);
+            Database.InsertInto(query1);
 
             return "registered";
         }
