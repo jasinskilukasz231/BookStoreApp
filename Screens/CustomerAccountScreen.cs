@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace BookStoreApp.Screens
 {
     public class CustomerAccountScreen
     {
+        public int numberOfBooks = 0;
+        public string booksIDs = "";
+        private int number_of_books_on_page = 10;
         public bool cartButtonPressed { get; set; }
         public bool settingsButtonPressed { get; set; }
         public bool searchButtonPressed { get; set; }
@@ -14,10 +18,8 @@ namespace BookStoreApp.Screens
         public ButtonClass searchButton { get; set; }
         public ButtonClass logOutButton { get; set; }
         public TextBoxClass searchTextBox { get; set; }
+        List<SingleBook> singlePageBooks = new List<SingleBook>();
 
-        public List<ButtonClass> buttonsList = new List<ButtonClass>();
-        public List<LabelClass> labelsList = new List<LabelClass>();
-        public List<LabelClass> priceLabelsList = new List<LabelClass>();
         public void CreateCustomerAccountScreen(int win_x, int win_y)
         {
             cartButton = new ButtonClass(win_x - 150, 30, 50, 50, "");
@@ -42,21 +44,10 @@ namespace BookStoreApp.Screens
             searchTextBox = new TextBoxClass(win_x / 2 - 130, 15, 200);
             searchTextBox.GetObject().Font = UtilitiesClass.arial12Regular;
 
-            int topPositon = win_y - 500;
-            for (int i = 0; i < 10; i++) //10->max books shown on one page
+            int starting_pos_y = 70;
+            for (int i = 0; i < number_of_books_on_page; i++)
             {
-                ButtonClass bookButton = new ButtonClass(win_x - 300, topPositon * (1 + i), 70, 70, "");
-                bookButton.GetObject().Visible = false;
-
-                LabelClass bookLabel = new LabelClass(win_x - 200, topPositon * (1 + i), "", 300, 70);
-                bookLabel.GetObject().Visible = false;
-
-                LabelClass bookPriceLabel = new LabelClass(win_x + 100, topPositon * (1 + i), "", 300, 70);
-                bookPriceLabel.GetObject().Visible = false;
-
-                buttonsList.Add(bookButton);
-                labelsList.Add(bookLabel);
-                priceLabelsList.Add(bookPriceLabel);
+                singlePageBooks.Add(new SingleBook(200, starting_pos_y * (i + 1)));
             }
         }
         private void CartButtonClick(object sender, EventArgs e)
@@ -70,13 +61,13 @@ namespace BookStoreApp.Screens
         private void searchButtonClick(object sender, EventArgs e)
         {
             searchButtonPressed = true;
-            DisplayBooks(SearchBook(searchTextBox.GetObject().Text));
+            booksIDs = SearchBooks(searchTextBox.GetObject().Text);
         }
         private void logOutButtonClick(object sender, EventArgs e)
         {
             logOutButtonPressed = true;
         }
-        private string SearchBook(string s)
+        private string SearchBooks(string s)
         {
             //function based on string which contains tags or names, shows books containing this tag
             //function returns id of books that should be shown
@@ -95,17 +86,19 @@ namespace BookStoreApp.Screens
                 string query = "SELECT id FROM books WHERE title LIKE(" + UtilitiesClass.quoteSign
                     + "%" + i + "%" + UtilitiesClass.quoteSign + ")";
                 ids += Database.FindMany(query);
-                Console.WriteLine(ids);
-                //SELECT books.id FROM books, tags_name, books_tags WHERE books_tags.id_book=books.id AND books_tags.id_tag=tags_name.id
-                //AND tags_name.name LIKE(%i%)
-                string query1 = "";
+
+                string query1 = "SELECT books.id FROM books, tag_name, books_tags WHERE books_tags.id_tag =" +
+                "tag_name.id AND books_tags.id_book = books.id AND tag_name.name LIKE(" + UtilitiesClass.quoteSign + "%" +
+                i + "%" + UtilitiesClass.quoteSign + ")";    
                 ids += Database.FindMany(query1);
             }
 
-            return UtilitiesClass.RemoveSameNumbers(ids);
+            return ids;
         }
-        private void DisplayBooks(string ids)
+        private  SplitBooks(Dictionary<string, Image> images, IEnumerable<string> titles, IEnumerable<string> prices)
         {
+            //TODO pierwsza ma byc wyswietlana ksiazka ktora ma najwiecej liter
+            //czyli policzyc cyfry w stringu i wyswietlic tylko te unikalne czyli nie wyswietlac dwa razy numeru 2
             int num = 0;
             for (int i = 0; i < ids.Length; i++)
             {
@@ -121,14 +114,16 @@ namespace BookStoreApp.Screens
                 priceLabelsList[i].GetObject().Text = "";
                 priceLabelsList[i].GetObject().Visible = false;
             }
+            string[] seperatedIDs = ids.Split(',');
             for (int i = 0; i < num; i++)//displaying
             {
-                buttonsList[i].GetObject().BackgroundImage = 
-                buttonsList[i].GetObject().Visible = true;
-                labelsList[i].GetObject().Text = 
-                labelsList[i].GetObject().Visible = true;
-                priceLabelsList[i].GetObject().Text = 
-                priceLabelsList[i].GetObject().Visible = true;
+                //buttonsList[i].GetObject().BackgroundImage = 
+                //buttonsList[i].GetObject().Visible = true;
+                //labelsList[i].GetObject().Text = Database.FindOneThing()
+                //labelsList[i].GetObject().Visible = true;
+                //priceLabelsList[i].GetObject().Text = Database.FindOneThing("SELECT price FROM books WHERE id=" + UtilitiesClass.quoteSign +
+                //    seperatedIDs[i] + UtilitiesClass.quoteSign);
+                //priceLabelsList[i].GetObject().Visible = true;
             }
             
         }

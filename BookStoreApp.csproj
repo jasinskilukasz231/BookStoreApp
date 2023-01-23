@@ -66,6 +66,7 @@
     <Compile Include="Screens\SettingsScreen.cs" />
     <Compile Include="Screens\StartingScreen.cs" />
     <Compile Include="Controls\TextBoxClass.cs" />
+    <Compile Include="SingleBook.cs" />
     <Compile Include="Utilities.cs" />
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
