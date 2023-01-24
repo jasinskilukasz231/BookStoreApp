@@ -61,7 +61,8 @@ namespace BookStoreApp.Screens
         private void searchButtonClick(object sender, EventArgs e)
         {
             searchButtonPressed = true;
-            booksIDs = SearchBooks(searchTextBox.GetObject().Text);
+            UtilitiesClass.RemoveSameNumbers(SearchBooks(searchTextBox.GetObject().Text).Split(','));
+
         }
         private void logOutButtonClick(object sender, EventArgs e)
         {
@@ -95,6 +96,7 @@ namespace BookStoreApp.Screens
 
             return ids;
         }
+        /*
         private  SplitBooks(Dictionary<string, Image> images, IEnumerable<string> titles, IEnumerable<string> prices)
         {
             //TODO pierwsza ma byc wyswietlana ksiazka ktora ma najwiecej liter
@@ -125,8 +127,8 @@ namespace BookStoreApp.Screens
                 //    seperatedIDs[i] + UtilitiesClass.quoteSign);
                 //priceLabelsList[i].GetObject().Visible = true;
             }
-            
+           
         }
-
+         */
     }
 }

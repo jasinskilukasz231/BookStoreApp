@@ -9,76 +9,87 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
-static class UtilitiesClass
+namespace BookStoreApp
 {
-    private static FontFamily fontFamily = new FontFamily("Arial");
-    public static Font arial12Regular = new Font(fontFamily, 12, FontStyle.Regular);
-    public static Font arial12Bold = new Font(fontFamily, 12, FontStyle.Bold);
-
-    private static string projectDir = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-    private static string imagesDir = projectDir + "/Images";
-    private static Bitmap cartImage, logOutImage, searchImage, settingsImage;
-    public static Dictionary<string, Bitmap> images = new Dictionary<string, Bitmap>();
-
-    public static char quoteSign = Convert.ToChar(34); //quote sign for sql queries
-    public static void LoadImages()
+    public static class UtilitiesClass
     {
-        //importing images from file
-        cartImage = new Bitmap(Image.FromFile(imagesDir + "/cart.png"), new Size(44, 44));
-        logOutImage = new Bitmap(Image.FromFile(imagesDir + "/logOut.png"), new Size(44, 44));
-        searchImage = new Bitmap(Image.FromFile(imagesDir + "/search.png"), new Size(44, 44));
-        settingsImage = new Bitmap(Image.FromFile(imagesDir + "/settings.png"), new Size(45, 45));
-        images.Add("cart", cartImage);
-        images.Add("logout", logOutImage);
-        images.Add("search", searchImage);    
-        images.Add("settings", settingsImage);
-    }
+        private static FontFamily fontFamily = new FontFamily("Arial");
+        public static Font arial12Regular = new Font(fontFamily, 12, FontStyle.Regular);
+        public static Font arial12Bold = new Font(fontFamily, 12, FontStyle.Bold);
 
-    //ussefull methods
-    public static string RemoveSameNumbers(string s)
-    {
-        for (int i = 0; i < s.Length; i++)//all chars in string
+        private static string projectDir = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+        private static string imagesDir = projectDir + "/Images";
+        private static Bitmap cartImage, logOutImage, searchImage, settingsImage;
+        public static Dictionary<string, Bitmap> images = new Dictionary<string, Bitmap>();
+
+        public static char quoteSign = Convert.ToChar(34); //quote sign for sql queries
+        public static void LoadImages()
         {
-            for (int j = i + 1; j < s.Length; j++)//set begining at the current pos, to the end
+            //importing images from file
+            cartImage = new Bitmap(Image.FromFile(imagesDir + "/cart.png"), new Size(44, 44));
+            logOutImage = new Bitmap(Image.FromFile(imagesDir + "/logOut.png"), new Size(44, 44));
+            searchImage = new Bitmap(Image.FromFile(imagesDir + "/search.png"), new Size(44, 44));
+            settingsImage = new Bitmap(Image.FromFile(imagesDir + "/settings.png"), new Size(45, 45));
+            images.Add("cart", cartImage);
+            images.Add("logout", logOutImage);
+            images.Add("search", searchImage);
+            images.Add("settings", settingsImage);
+        }
+
+        //ussefull methods
+        public static string RemoveSameNumbers(string[] s)
+        {
+            string result = "";
+            for (int j = 0; j < s.Count(); j++)
             {
-                if (s[j] == s[i])//if any sign is the same, delete it
+                bool unique = true;
+                string single = s[j];
+                for (int i = j + 1; i < s.Count(); i++)
                 {
-                    s = s.Remove(j);
+                    if (single == s[i])//the same numbers
+                    {
+                        unique = false;
+                    }
+                }
+                if (unique == true)
+                {
+                    result += single + ",";
                 }
             }
-        }
-        return s;
-    }
-    public static string ClearString(string s)
-    {
-        //isolating key words from the string:
-        //adding + as a seperator
-        //lowering all signs
-        //removing not letters and not numbers
 
-        string new_s = "";
-        string stringReady = "";
-        foreach (char i in s)
-        {
-            if (i == ' ') new_s += "+";
-            else new_s += Char.ToLower(i);
+            return result;
         }
-        for (int i = 0; i < new_s.Length; i++)
+        public static string ClearString(string s)
         {
-            if (new_s[i] != '+')
+            //isolating key words from the string:
+            //adding + as a seperator
+            //lowering all signs
+            //removing not letters and not numbers
+
+            string new_s = "";
+            string stringReady = "";
+            foreach (char i in s)
             {
-                if (Char.IsLetterOrDigit(new_s[i]))
+                if (i == ' ') new_s += "+";
+                else new_s += Char.ToLower(i);
+            }
+            for (int i = 0; i < new_s.Length; i++)
+            {
+                if (new_s[i] != '+')
                 {
-                    stringReady += new_s[i];
+                    if (Char.IsLetterOrDigit(new_s[i]))
+                    {
+                        stringReady += new_s[i];
+                    }
+                }
+                else
+                {
+                    stringReady += "+";
                 }
             }
-            else
-            {
-                stringReady += "+";
-            }
+
+            return stringReady;
         }
 
-        return stringReady;
     }
-
 }
