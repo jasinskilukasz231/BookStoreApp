@@ -6,9 +6,10 @@ namespace BookStoreApp.Screens
 {
     public class CustomerAccountScreen
     {
-        public int numberOfBooks = 0;
-        public string booksIDs = "";
+        private List<string> booksIDs = new List<string>();
+        private int numbersOfNextPageButtons = 0;
         private int number_of_books_on_page = 10;
+        private int pageNumber = 1;
         public bool cartButtonPressed { get; set; }
         public bool settingsButtonPressed { get; set; }
         public bool searchButtonPressed { get; set; }
@@ -19,16 +20,16 @@ namespace BookStoreApp.Screens
         public ButtonClass logOutButton { get; set; }
         public TextBoxClass searchTextBox { get; set; }
         List<SingleBook> singlePageBooks = new List<SingleBook>();
+        public ButtonClass nextPageButton { get; set; }
+        public ButtonClass prevPageButton { get; set; }
 
         public void CreateCustomerAccountScreen(int win_x, int win_y)
         {
             cartButton = new ButtonClass(win_x - 150, 30, 50, 50, "");
             cartButton.GetObject().Click += new EventHandler(CartButtonClick);
 
-
             settingsButton = new ButtonClass(win_x - 100, 30, 50, 50, "");
             settingsButton.GetObject().Click += new EventHandler(settingsButtonClick);
-
 
             searchButton = new ButtonClass(win_x / 2, 30, 50, 50, "");
             searchButton.GetObject().Click += new EventHandler(searchButtonClick);
@@ -43,6 +44,12 @@ namespace BookStoreApp.Screens
 
             searchTextBox = new TextBoxClass(win_x / 2 - 130, 15, 200);
             searchTextBox.GetObject().Font = UtilitiesClass.arial12Regular;
+
+            nextPageButton = new ButtonClass(1000, 30, 50, 50, "");
+            nextPageButton.GetObject().Click += new EventHandler(nextPageButtonClick);
+
+            prevPageButton = new ButtonClass(200, 30, 50, 50, "");
+            prevPageButton.GetObject().Click += new EventHandler(prevPageButtonClick);
 
             int starting_pos_y = 70;
             for (int i = 0; i < number_of_books_on_page; i++)
@@ -61,12 +68,45 @@ namespace BookStoreApp.Screens
         private void searchButtonClick(object sender, EventArgs e)
         {
             searchButtonPressed = true;
-            UtilitiesClass.RemoveSameNumbers(SearchBooks(searchTextBox.GetObject().Text).Split(','));
-
+            string[] idss = UtilitiesClass.RemoveSameNumbers(SearchBooks(searchTextBox.GetObject().Text).Split(',')).Split(',');
+            //CAN CAUSE ERRORS !!!!!!!!!!!!!!!!
+            foreach (var i in idss)
+            {
+                booksIDs.Add(i);
+            }
+            //////////////
+            pageNumber = 1;
+            if(booksIDs.Count >= pageNumber * 10)
+            {
+                //assign 10 books, begining (pageNumber - 1) * 10
+            }
+            else if(booksIDs.Count < pageNumber * 10)
+            {
+                if(booksIDs.Count > (pageNumber - 1) * 10)
+                {
+                    //assign beggining (pageNumber - 1) * 10 + 1, end size
+                }
+                else
+                {
+                    //make next page button dissabled
+                }
+            }
         }
         private void logOutButtonClick(object sender, EventArgs e)
         {
             logOutButtonPressed = true;
+        }
+        private void nextPageButtonClick(object sender, EventArgs e)
+        {
+            pageNumber++;
+        }
+        private void prevPageButtonClick(object sender, EventArgs e)
+        {
+            pageNumber--;
+        }
+        private void CreateNextPageButtons(int number)
+        {
+
         }
         private string SearchBooks(string s)
         {
@@ -95,6 +135,18 @@ namespace BookStoreApp.Screens
             }
 
             return ids;
+        }
+        private void AssignBooksData(int idSize, string[] ids, List<SingleBook> singlePageBooks)
+        {
+            for (int i = 0; i < idSize; i++)//displaying
+            {
+                string title_query = Database.FindOneThing("SELECT title FROM books WHERE id=" + UtilitiesClass.quoteSign +
+                    ids[i] + UtilitiesClass.quoteSign);
+                string price_query = Database.FindOneThing("SELECT price FROM books WHERE id=" + UtilitiesClass.quoteSign +
+                    ids[i] + UtilitiesClass.quoteSign);
+
+                //singlePageBooks[i].setParams(, title_query, price_query); 
+            }
         }
         /*
         private  SplitBooks(Dictionary<string, Image> images, IEnumerable<string> titles, IEnumerable<string> prices)
