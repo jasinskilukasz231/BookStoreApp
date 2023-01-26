@@ -72,14 +72,6 @@ system
 database
 -functions for operating with database
 
-w initcustomer accout tworze 10 obiektow pustych
-w przycisku 
-funkcja do znajdowania
-przesylam do zmiennych
-usuwam duplikaty
-licze -> stad wiem ile przyciskow do next pageow dac
-funckja ktora robi visible i przypisuje customer screen
-i w hide dodac te booksy
 
 
 

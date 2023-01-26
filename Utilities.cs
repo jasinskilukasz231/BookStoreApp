@@ -19,6 +19,7 @@ namespace BookStoreApp
 
         private static string projectDir = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
         private static string imagesDir = projectDir + "/Images";
+        public static string booksImagesDir = projectDir + "/BooksImages/";
         private static Bitmap cartImage, logOutImage, searchImage, settingsImage;
         public static Dictionary<string, Bitmap> images = new Dictionary<string, Bitmap>();
 
@@ -57,7 +58,7 @@ namespace BookStoreApp
                 }
             }
 
-            return result;
+            return result.Remove(result.Length - 1);
         }
         public static string ClearString(string s)
         {

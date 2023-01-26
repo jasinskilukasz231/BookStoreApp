@@ -7,7 +7,6 @@ namespace BookStoreApp.Screens
     public class CustomerAccountScreen
     {
         private List<string> booksIDs = new List<string>();
-        private int numbersOfNextPageButtons = 0;
         private int number_of_books_on_page = 10;
         private int pageNumber = 1;
         public bool cartButtonPressed { get; set; }
@@ -19,7 +18,7 @@ namespace BookStoreApp.Screens
         public ButtonClass searchButton { get; set; }
         public ButtonClass logOutButton { get; set; }
         public TextBoxClass searchTextBox { get; set; }
-        List<SingleBook> singlePageBooks = new List<SingleBook>();
+        public List<SingleBook> singlePageBooks = new List<SingleBook>();
         public ButtonClass nextPageButton { get; set; }
         public ButtonClass prevPageButton { get; set; }
 
@@ -45,16 +44,19 @@ namespace BookStoreApp.Screens
             searchTextBox = new TextBoxClass(win_x / 2 - 130, 15, 200);
             searchTextBox.GetObject().Font = UtilitiesClass.arial12Regular;
 
-            nextPageButton = new ButtonClass(1000, 30, 50, 50, "");
+            nextPageButton = new ButtonClass(win_x - 200, win_y - 50, 170, 50, "Next Page");
+            nextPageButton.GetObject().Font = UtilitiesClass.arial12Regular;    
             nextPageButton.GetObject().Click += new EventHandler(nextPageButtonClick);
 
-            prevPageButton = new ButtonClass(200, 30, 50, 50, "");
+            prevPageButton = new ButtonClass(200, win_y - 50, 170, 50, "Previous Page");
             prevPageButton.GetObject().Click += new EventHandler(prevPageButtonClick);
+            prevPageButton.GetObject().Font = UtilitiesClass.arial12Regular;
 
-            int starting_pos_y = 70;
+            int starting_pos_y = 100;
+            int gap = 80;
             for (int i = 0; i < number_of_books_on_page; i++)
             {
-                singlePageBooks.Add(new SingleBook(200, starting_pos_y * (i + 1)));
+                singlePageBooks.Add(new SingleBook(300, starting_pos_y + gap * i));
             }
         }
         private void CartButtonClick(object sender, EventArgs e)
@@ -68,29 +70,17 @@ namespace BookStoreApp.Screens
         private void searchButtonClick(object sender, EventArgs e)
         {
             searchButtonPressed = true;
-            string[] idss = UtilitiesClass.RemoveSameNumbers(SearchBooks(searchTextBox.GetObject().Text).Split(',')).Split(',');
+            string[] idss = UtilitiesClass.RemoveSameNumbers(FindBooks(searchTextBox.GetObject().Text).Split(',')).Split(',');
             //CAN CAUSE ERRORS !!!!!!!!!!!!!!!!
+            booksIDs.Clear();   
             foreach (var i in idss)
             {
                 booksIDs.Add(i);
             }
             //////////////
+            
             pageNumber = 1;
-            if(booksIDs.Count >= pageNumber * 10)
-            {
-                //assign 10 books, begining (pageNumber - 1) * 10
-            }
-            else if(booksIDs.Count < pageNumber * 10)
-            {
-                if(booksIDs.Count > (pageNumber - 1) * 10)
-                {
-                    //assign beggining (pageNumber - 1) * 10 + 1, end size
-                }
-                else
-                {
-                    //make next page button dissabled
-                }
-            }
+            AssignBooksData(pageNumber, booksIDs);
         }
         private void logOutButtonClick(object sender, EventArgs e)
         {
@@ -104,11 +94,7 @@ namespace BookStoreApp.Screens
         {
             pageNumber--;
         }
-        private void CreateNextPageButtons(int number)
-        {
-
-        }
-        private string SearchBooks(string s)
+        private string FindBooks(string s)
         {
             //function based on string which contains tags or names, shows books containing this tag
             //function returns id of books that should be shown
@@ -132,55 +118,58 @@ namespace BookStoreApp.Screens
                 "tag_name.id AND books_tags.id_book = books.id AND tag_name.name LIKE(" + UtilitiesClass.quoteSign + "%" +
                 i + "%" + UtilitiesClass.quoteSign + ")";    
                 ids += Database.FindMany(query1);
+
+                string query2 = "SELECT id FROM books WHERE autor LIKE(" + UtilitiesClass.quoteSign
+                    + "%" + i + "%" + UtilitiesClass.quoteSign + ")";
+                ids += Database.FindMany(query2);
             }
 
             return ids;
         }
-        private void AssignBooksData(int idSize, string[] ids, List<SingleBook> singlePageBooks)
+        private void AssignBooksData(int pageNr, List<string> booksIds)
         {
-            for (int i = 0; i < idSize; i++)//displaying
+            if (booksIds.Count >= pageNr * number_of_books_on_page)
             {
-                string title_query = Database.FindOneThing("SELECT title FROM books WHERE id=" + UtilitiesClass.quoteSign +
-                    ids[i] + UtilitiesClass.quoteSign);
-                string price_query = Database.FindOneThing("SELECT price FROM books WHERE id=" + UtilitiesClass.quoteSign +
-                    ids[i] + UtilitiesClass.quoteSign);
+                //assign 10 books, begining (pageNumber - 1) * 10
+                for (int i = (pageNumber - 1) * number_of_books_on_page; i < pageNumber * number_of_books_on_page - 1; i++)
+                {
+                    string title_query = Database.FindOneThing("SELECT displayTitle FROM books WHERE id=" + booksIds[i]);
+                    string price_query = Database.FindOneThing("SELECT price FROM books WHERE id=" + booksIds[i]);
 
-                //singlePageBooks[i].setParams(, title_query, price_query); 
+                    string imageDir = UtilitiesClass.booksImagesDir + Database.FindOneThing("SELECT imageName FROM books WHERE id=" + booksIds[i]);
+                    Bitmap image = new Bitmap(Image.FromFile(imageDir), new Size(70, 70));
+
+                    singlePageBooks[i].setParams(image, title_query, price_query);
+                    singlePageBooks[i].setVisible(true);
+                }
+            }
+            else if (booksIds.Count < pageNr * number_of_books_on_page)
+            {
+                if (booksIds.Count > (pageNr - 1) * number_of_books_on_page)
+                {
+                    for (int i = 0; i < number_of_books_on_page; i++)
+                    {
+                        singlePageBooks[i].setVisible(false);
+                    }
+                    //assign books beggining (pageNumber - 1) * 10, end size - 1
+                    for (int i = (pageNumber - 1) * number_of_books_on_page; i < booksIds.Count - 1; i++)
+                    {
+                        string title_query = Database.FindOneThing("SELECT displayTitle FROM books WHERE id=" + booksIds[i]);
+                        string price_query = Database.FindOneThing("SELECT price FROM books WHERE id=" + booksIds[i]);
+
+                        string imageDir = UtilitiesClass.booksImagesDir + Database.FindOneThing("SELECT imageName FROM books WHERE id=" + booksIds[i]);
+                        Bitmap image = new Bitmap(Image.FromFile(imageDir), new Size(70, 70));
+
+                        singlePageBooks[i].setParams(image, title_query, price_query);
+                        singlePageBooks[i].setVisible(true);
+                    }
+                }
+                else
+                {
+                    nextPageButton.GetObject().Enabled = false;
+                    //make next page button dissabled
+                }
             }
         }
-        /*
-        private  SplitBooks(Dictionary<string, Image> images, IEnumerable<string> titles, IEnumerable<string> prices)
-        {
-            //TODO pierwsza ma byc wyswietlana ksiazka ktora ma najwiecej liter
-            //czyli policzyc cyfry w stringu i wyswietlic tylko te unikalne czyli nie wyswietlac dwa razy numeru 2
-            int num = 0;
-            for (int i = 0; i < ids.Length; i++)
-            {
-                if (ids[i] == ',') num++; //counting numbers
-            }
-
-            for (int i = 0; i < 10; i++)//clearing all objects
-            {
-                buttonsList[i].GetObject().BackgroundImage = null;
-                buttonsList[i].GetObject().Visible = false;
-                labelsList[i].GetObject().Text = "";
-                labelsList[i].GetObject().Visible = false;
-                priceLabelsList[i].GetObject().Text = "";
-                priceLabelsList[i].GetObject().Visible = false;
-            }
-            string[] seperatedIDs = ids.Split(',');
-            for (int i = 0; i < num; i++)//displaying
-            {
-                //buttonsList[i].GetObject().BackgroundImage = 
-                //buttonsList[i].GetObject().Visible = true;
-                //labelsList[i].GetObject().Text = Database.FindOneThing()
-                //labelsList[i].GetObject().Visible = true;
-                //priceLabelsList[i].GetObject().Text = Database.FindOneThing("SELECT price FROM books WHERE id=" + UtilitiesClass.quoteSign +
-                //    seperatedIDs[i] + UtilitiesClass.quoteSign);
-                //priceLabelsList[i].GetObject().Visible = true;
-            }
-           
-        }
-         */
     }
 }

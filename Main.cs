@@ -256,6 +256,14 @@ namespace BookStoreApp
             Controls.Add(customerAccountScreen.logOutButton.GetObject());
             Controls.Add(customerAccountScreen.searchButton.GetObject());
             Controls.Add(customerAccountScreen.searchTextBox.GetObject());
+            Controls.Add(customerAccountScreen.nextPageButton.GetObject());
+            Controls.Add(customerAccountScreen.prevPageButton.GetObject());
+            foreach (var i in customerAccountScreen.singlePageBooks)
+            {
+                Controls.Add(i.GetButtonObj().GetObject());
+                Controls.Add(i.GetTtleObj().GetObject());
+                Controls.Add(i.GetPriceObj().GetObject());
+            }
         }
         private void ShowCustomerAccountScreen()
         {
@@ -264,6 +272,8 @@ namespace BookStoreApp
             customerAccountScreen.logOutButton.GetObject().Visible = true;
             customerAccountScreen.searchButton.GetObject().Visible = true;
             customerAccountScreen.searchTextBox.GetObject().Visible = true;
+            customerAccountScreen.nextPageButton.GetObject().Visible = true;
+            customerAccountScreen.prevPageButton.GetObject().Visible = true;
         }
         private void HideCustomerAccountScreen()
         {
@@ -272,6 +282,14 @@ namespace BookStoreApp
             customerAccountScreen.logOutButton.GetObject().Visible = false;
             customerAccountScreen.searchButton.GetObject().Visible = false;
             customerAccountScreen.searchTextBox.GetObject().Visible = false;
+            customerAccountScreen.nextPageButton.GetObject().Visible = false;
+            customerAccountScreen.prevPageButton.GetObject().Visible = false;
+            for (int i = 0; i < 10; i++)
+            {
+                customerAccountScreen.singlePageBooks[i].GetButtonObj().GetObject().Visible = false;
+                customerAccountScreen.singlePageBooks[i].GetPriceObj().GetObject().Visible = false;
+                customerAccountScreen.singlePageBooks[i].GetTtleObj().GetObject().Visible = false;
+            }
         }
         private void InitSettingsScreen()
         {
