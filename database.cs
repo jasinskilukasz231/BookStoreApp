@@ -93,5 +93,34 @@ namespace BookStoreApp
                 return null;
             }
         }
+        public static string[] FindBookData(string query)
+        {
+            //this function reads all data from database about certain book. Returns specific numbers of columns.
+            sqlConnection = new MySqlConnection(connectionString);
+            sqlCommand = new MySqlCommand(query, sqlConnection);
+            sqlCommand.CommandTimeout = 60;
+            try
+            {
+                int i = 0;
+                string[] data = new string[10];
+                sqlConnection.Open();
+                reader = sqlCommand.ExecuteReader();
+
+                if(reader.HasRows)
+                {
+                    while(reader.Read())
+                    {
+                        data[i] = reader.GetString(i);
+                        i++;
+                    }
+                }
+                return data;
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return null;
+            }
+        }
     }
 }

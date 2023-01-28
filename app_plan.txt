@@ -72,7 +72,8 @@ system
 database
 -functions for operating with database
 
-
-
+ERRORS::::::::;
+zmienilem parse w set params
+ta funckcja w database find book data
 
 

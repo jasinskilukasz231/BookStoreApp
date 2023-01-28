@@ -49,6 +49,8 @@
   <ItemGroup>
     <Compile Include="Controls\ButtonClass.cs" />
     <Compile Include="Controls\CheckBoxClass.cs" />
+    <Compile Include="Screens\CartScreen.cs" />
+    <Compile Include="Screens\SingleBookScreen.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Controls\LabelClass.cs" />
     <Compile Include="Main.cs">
@@ -59,7 +61,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Screens\BookInfoScreen.cs" />
     <Compile Include="Screens\CustomerAccountScreen.cs" />
     <Compile Include="Screens\RegisterInfoScreen.cs" />
     <Compile Include="Screens\RegisterScreen.cs" />

@@ -4,6 +4,7 @@ namespace BookStoreApp
 {
     public class SingleBook
     {
+        public int bookId = 0;
         public ButtonClass button { get; set; }
         public LabelClass title { get; set; }
         public LabelClass price { get; set; }
@@ -20,8 +21,9 @@ namespace BookStoreApp
             price.GetObject().Visible = false;
             price.GetObject().Font = UtilitiesClass.arial12Bold;
         }
-        public void setParams(Bitmap img, string tit, string pri)
+        public void setParams(int id, Bitmap img, string tit, string pri)
         {
+            bookId = id;
             button.GetObject().BackgroundImage = img;
             title.GetObject().Text = tit;
             price.GetObject().Text = pri;
