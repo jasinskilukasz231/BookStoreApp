@@ -16,6 +16,7 @@ namespace BookStoreApp
         private static FontFamily fontFamily = new FontFamily("Arial");
         public static Font arial12Regular = new Font(fontFamily, 12, FontStyle.Regular);
         public static Font arial12Bold = new Font(fontFamily, 12, FontStyle.Bold);
+        public static Font arial24Bold = new Font(fontFamily, 24, FontStyle.Bold);
 
         private static string projectDir = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
         private static string imagesDir = projectDir + "/Images";

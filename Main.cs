@@ -19,10 +19,13 @@ namespace BookStoreApp
         //2->starting screen
         //3->register screen
 
+        //change this 
         Screens.StartingScreen startingScreen = new Screens.StartingScreen();
         Screens.RegisterScreen registerScreen = new Screens.RegisterScreen();
         Screens.RegisterInfoScreen registerInfoScreen = new Screens.RegisterInfoScreen();
         Screens.CustomerAccountScreen customerAccountScreen = new Screens.CustomerAccountScreen();
+        Screens.SingleBookScreen singleBookScreen;
+        Screens.CartScreen cartScreen;
 
         Timer appTimer = new Timer();
 
@@ -50,6 +53,9 @@ namespace BookStoreApp
                     ShowStartingScreen();
                     HideRegisterScreen();
                     HideCustomerAccountScreen();
+                    singleBookScreen = new Screens.SingleBookScreen(win_x, win_y);
+                    cartScreen = new Screens.CartScreen(win_x, win_y);
+                    AddToControls();
                     whatToRender = 0;
                     break;
                 case 2: //show starting screen
@@ -110,7 +116,7 @@ namespace BookStoreApp
                         {
                             MessageBox.Show("Your login is taken", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
-                        else //registered
+                        else if(registerScreen.Register() == "registered")//registered
                         {
                             whatToRender = 5;
                             registerInfoScreen.createInfoScreen(win_x, win_y);
@@ -122,6 +128,8 @@ namespace BookStoreApp
                     {
                         HideCustomerAccountScreen();
                         ShowStartingScreen();
+                        startingScreen.StartingScreenTextBoxLogin.GetObject().Text = "";
+                        startingScreen.StartingScreenTextBoxPassword.GetObject().Text = "";
                         customerAccountScreen.logOutButtonPressed = false;
                     }
                     if (customerAccountScreen.settingsButtonPressed == true)
@@ -135,6 +143,28 @@ namespace BookStoreApp
                         customerAccountScreen.cartButtonPressed = true;
                         HideCustomerAccountScreen();
                         ShowCartScreen();
+                    }
+                    //single book screen
+                    if(customerAccountScreen.singleBookButtonPressed==true)
+                    {
+                        customerAccountScreen.singleBookButtonPressed = false;
+                        string query = "SELECT displayTitle, autor, year, nr_pages, price, possible_to_loan, imageName FROM books WHERE id=" +
+                            customerAccountScreen.singlePageBooks[customerAccountScreen.buttonNumber].bookId;
+                        string[] data = Database.FindBookData(query);
+                        singleBookScreen.SetParams(data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
+                        HideCustomerAccountScreen();
+                        ShowSingleBookScreen();
+                    }
+                    if(singleBookScreen.backButtonPressed==true)
+                    {
+                        singleBookScreen.backButtonPressed = false;
+                        HideSingleBookScreen();
+                        ShowCustomerAccountScreen();
+                    }
+                    if(singleBookScreen.addToCartButtonPressed==true)
+                    {
+                        singleBookScreen.addToCartButtonPressed = false;
+                        MessageBox.Show("Book added to cart");
                     }
                     break;
             }
@@ -272,8 +302,6 @@ namespace BookStoreApp
             customerAccountScreen.logOutButton.GetObject().Visible = true;
             customerAccountScreen.searchButton.GetObject().Visible = true;
             customerAccountScreen.searchTextBox.GetObject().Visible = true;
-            customerAccountScreen.nextPageButton.GetObject().Visible = true;
-            customerAccountScreen.prevPageButton.GetObject().Visible = true;
         }
         private void HideCustomerAccountScreen()
         {
@@ -314,6 +342,51 @@ namespace BookStoreApp
         private void HideCartScreen()
         {
 
+        }
+
+        private void ShowSingleBookScreen()
+        {
+            singleBookScreen.title.GetObject().Visible = true;
+            singleBookScreen.autor.GetObject().Visible = true;
+            singleBookScreen.year.GetObject().Visible = true;
+            singleBookScreen.pages.GetObject().Visible = true;
+            singleBookScreen.price.GetObject().Visible = true;
+            singleBookScreen.loan.GetObject().Visible = true;
+            singleBookScreen.addToCart.GetObject().Visible = true;
+            singleBookScreen.backButton.GetObject().Visible = true;
+            singleBookScreen.loan.GetObject().Visible = true;
+            singleBookScreen.bookPicture.Visible = true;
+        }
+        private void HideSingleBookScreen()
+        {
+            singleBookScreen.title.GetObject().Visible = false;
+            singleBookScreen.autor.GetObject().Visible = false;
+            singleBookScreen.year.GetObject().Visible = false;
+            singleBookScreen.pages.GetObject().Visible = false;
+            singleBookScreen.price.GetObject().Visible = false;
+            singleBookScreen.loan.GetObject().Visible = false;
+            singleBookScreen.addToCart.GetObject().Visible = false;
+            singleBookScreen.backButton.GetObject().Visible = false;
+            singleBookScreen.loan.GetObject().Visible = false;
+            singleBookScreen.bookPicture.Visible = false;
+        }
+        private void AddToControls()
+        {
+            //single book screen
+            Controls.Add(singleBookScreen.title.GetObject());
+            Controls.Add(singleBookScreen.autor.GetObject());
+            Controls.Add(singleBookScreen.year.GetObject());
+            Controls.Add(singleBookScreen.pages.GetObject());
+            Controls.Add(singleBookScreen.price.GetObject());
+            Controls.Add(singleBookScreen.loan.GetObject());
+            Controls.Add(singleBookScreen.addToCart.GetObject());
+            Controls.Add(singleBookScreen.backButton.GetObject());
+            Controls.Add(singleBookScreen.loan.GetObject());
+            Controls.Add(singleBookScreen.bookPicture);
+
+            //cart screen
+            Controls.Add(cartScreen.backButton.GetObject());
+            Controls.Add(cartScreen.orderButton.GetObject());
         }
     }
 }

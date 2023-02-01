@@ -9,6 +9,8 @@ namespace BookStoreApp.Screens
         private List<string> booksIDs = new List<string>();
         private int number_of_books_on_page = 10;
         private int pageNumber = 1;
+        public int buttonNumber = 0;//indicator of buttons
+        public bool singleBookButtonPressed = false;
         public bool cartButtonPressed { get; set; }
         public bool settingsButtonPressed { get; set; }
         public bool searchButtonPressed { get; set; }
@@ -58,6 +60,17 @@ namespace BookStoreApp.Screens
             {
                 singlePageBooks.Add(new SingleBook(300, starting_pos_y + gap * i));
             }
+
+            singlePageBooks[0].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks0);
+            singlePageBooks[1].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks1);
+            singlePageBooks[2].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks2);
+            singlePageBooks[3].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks3);
+            singlePageBooks[4].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks4);
+            singlePageBooks[5].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks5);
+            singlePageBooks[6].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks6);
+            singlePageBooks[7].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks7);
+            singlePageBooks[8].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks8);
+            singlePageBooks[9].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks9);
         }
         private void CartButtonClick(object sender, EventArgs e)
         {
@@ -69,18 +82,23 @@ namespace BookStoreApp.Screens
         }
         private void searchButtonClick(object sender, EventArgs e)
         {
-            searchButtonPressed = true;
-            string[] idss = UtilitiesClass.RemoveSameNumbers(FindBooks(searchTextBox.GetObject().Text).Split(',')).Split(',');
-            //CAN CAUSE ERRORS !!!!!!!!!!!!!!!!
-            booksIDs.Clear();   
-            foreach (var i in idss)
+            if (searchTextBox.GetObject().Text != "")
             {
-                booksIDs.Add(i);
+                searchButtonPressed = true;
+                nextPageButton.GetObject().Visible = true;
+                prevPageButton.GetObject().Visible = true;
+                string[] idss = UtilitiesClass.RemoveSameNumbers(FindBooks(searchTextBox.GetObject().Text).Split(',')).Split(',');
+                //CAN CAUSE ERRORS !!!!!!!!!!!!!!!!
+                booksIDs.Clear();
+                foreach (var i in idss)
+                {
+                    booksIDs.Add(i);
+                }
+                //////////////
+
+                pageNumber = 1;
+                AssignBooksData(pageNumber, booksIDs);
             }
-            //////////////
-            
-            pageNumber = 1;
-            AssignBooksData(pageNumber, booksIDs);
         }
         private void logOutButtonClick(object sender, EventArgs e)
         {
@@ -139,7 +157,7 @@ namespace BookStoreApp.Screens
                     string imageDir = UtilitiesClass.booksImagesDir + Database.FindOneThing("SELECT imageName FROM books WHERE id=" + booksIds[i]);
                     Bitmap image = new Bitmap(Image.FromFile(imageDir), new Size(70, 70));
 
-                    singlePageBooks[i].setParams(image, title_query, price_query);
+                    singlePageBooks[i].setParams(int.Parse(booksIds[i]), image, title_query, price_query);
                     singlePageBooks[i].setVisible(true);
                 }
             }
@@ -160,7 +178,7 @@ namespace BookStoreApp.Screens
                         string imageDir = UtilitiesClass.booksImagesDir + Database.FindOneThing("SELECT imageName FROM books WHERE id=" + booksIds[i]);
                         Bitmap image = new Bitmap(Image.FromFile(imageDir), new Size(70, 70));
 
-                        singlePageBooks[i].setParams(image, title_query, price_query);
+                        singlePageBooks[i].setParams(int.Parse(booksIds[i]), image, title_query, price_query);
                         singlePageBooks[i].setVisible(true);
                     }
                 }
@@ -170,6 +188,56 @@ namespace BookStoreApp.Screens
                     //make next page button dissabled
                 }
             }
+        }
+        private void SinglePageBooks0(Object sender, EventArgs e)
+        {
+            buttonNumber = 0;
+            singleBookButtonPressed = true;
+        }
+        private void SinglePageBooks1(Object sender, EventArgs e)
+        {
+            buttonNumber = 1;
+            singleBookButtonPressed = true;
+        }
+        private void SinglePageBooks2(Object sender, EventArgs e)
+        {
+            buttonNumber = 2;
+            singleBookButtonPressed = true;
+        }
+        private void SinglePageBooks3(Object sender, EventArgs e)
+        {
+            buttonNumber = 3;
+            singleBookButtonPressed = true;
+        }
+        private void SinglePageBooks4(Object sender, EventArgs e)
+        {
+            buttonNumber = 4;
+            singleBookButtonPressed = true;
+        }
+        private void SinglePageBooks5(Object sender, EventArgs e)
+        {
+            buttonNumber = 5;
+            singleBookButtonPressed = true;
+        }
+        private void SinglePageBooks6(Object sender, EventArgs e)
+        {
+            buttonNumber = 6;
+            singleBookButtonPressed = true;
+        }
+        private void SinglePageBooks7(Object sender, EventArgs e)
+        {
+            buttonNumber = 7;
+            singleBookButtonPressed = true;
+        }
+        private void SinglePageBooks8(Object sender, EventArgs e)
+        {
+            buttonNumber = 8;
+            singleBookButtonPressed = true;
+        }
+        private void SinglePageBooks9(Object sender, EventArgs e)
+        {
+            buttonNumber = 9;
+            singleBookButtonPressed = true;
         }
     }
 }
