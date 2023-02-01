@@ -116,7 +116,7 @@ namespace BookStoreApp
                         {
                             MessageBox.Show("Your login is taken", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
-                        else //registered
+                        else if(registerScreen.Register() == "registered")//registered
                         {
                             whatToRender = 5;
                             registerInfoScreen.createInfoScreen(win_x, win_y);
@@ -148,10 +148,11 @@ namespace BookStoreApp
                     if(customerAccountScreen.singleBookButtonPressed==true)
                     {
                         customerAccountScreen.singleBookButtonPressed = false;
-                        string query = "SELECT displayTitle, autor, year, pages, price, possibleToLoan FROM books WHERE id=" +
+                        string query = "SELECT displayTitle, autor, year, nr_pages, price, possible_to_loan, imageName FROM books WHERE id=" +
                             customerAccountScreen.singlePageBooks[customerAccountScreen.buttonNumber].bookId;
                         string[] data = Database.FindBookData(query);
-                        singleBookScreen.SetParams(data[0], data[1], data[2], data[3], data[4], data[5]);
+                        singleBookScreen.SetParams(data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
+                        HideCustomerAccountScreen();
                         ShowSingleBookScreen();
                     }
                     if(singleBookScreen.backButtonPressed==true)
@@ -301,8 +302,6 @@ namespace BookStoreApp
             customerAccountScreen.logOutButton.GetObject().Visible = true;
             customerAccountScreen.searchButton.GetObject().Visible = true;
             customerAccountScreen.searchTextBox.GetObject().Visible = true;
-            customerAccountScreen.nextPageButton.GetObject().Visible = true;
-            customerAccountScreen.prevPageButton.GetObject().Visible = true;
         }
         private void HideCustomerAccountScreen()
         {
@@ -354,7 +353,9 @@ namespace BookStoreApp
             singleBookScreen.price.GetObject().Visible = true;
             singleBookScreen.loan.GetObject().Visible = true;
             singleBookScreen.addToCart.GetObject().Visible = true;
+            singleBookScreen.backButton.GetObject().Visible = true;
             singleBookScreen.loan.GetObject().Visible = true;
+            singleBookScreen.bookPicture.Visible = true;
         }
         private void HideSingleBookScreen()
         {
@@ -365,7 +366,9 @@ namespace BookStoreApp
             singleBookScreen.price.GetObject().Visible = false;
             singleBookScreen.loan.GetObject().Visible = false;
             singleBookScreen.addToCart.GetObject().Visible = false;
+            singleBookScreen.backButton.GetObject().Visible = false;
             singleBookScreen.loan.GetObject().Visible = false;
+            singleBookScreen.bookPicture.Visible = false;
         }
         private void AddToControls()
         {
@@ -377,7 +380,9 @@ namespace BookStoreApp
             Controls.Add(singleBookScreen.price.GetObject());
             Controls.Add(singleBookScreen.loan.GetObject());
             Controls.Add(singleBookScreen.addToCart.GetObject());
+            Controls.Add(singleBookScreen.backButton.GetObject());
             Controls.Add(singleBookScreen.loan.GetObject());
+            Controls.Add(singleBookScreen.bookPicture);
 
             //cart screen
             Controls.Add(cartScreen.backButton.GetObject());

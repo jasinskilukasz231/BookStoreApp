@@ -85,6 +85,8 @@ namespace BookStoreApp.Screens
             if (searchTextBox.GetObject().Text != "")
             {
                 searchButtonPressed = true;
+                nextPageButton.GetObject().Visible = true;
+                prevPageButton.GetObject().Visible = true;
                 string[] idss = UtilitiesClass.RemoveSameNumbers(FindBooks(searchTextBox.GetObject().Text).Split(',')).Split(',');
                 //CAN CAUSE ERRORS !!!!!!!!!!!!!!!!
                 booksIDs.Clear();

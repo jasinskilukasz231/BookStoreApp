@@ -102,7 +102,7 @@ namespace BookStoreApp
             try
             {
                 int i = 0;
-                string[] data = new string[10];
+                string[] data = new string[7];
                 sqlConnection.Open();
                 reader = sqlCommand.ExecuteReader();
 
@@ -110,8 +110,13 @@ namespace BookStoreApp
                 {
                     while(reader.Read())
                     {
-                        data[i] = reader.GetString(i);
-                        i++;
+                        data[0] = reader.GetString(0);
+                        data[1] = reader.GetString(1);
+                        data[2] = reader.GetString(2);
+                        data[3] = reader.GetString(3);
+                        data[4] = reader.GetString(4);
+                        data[5] = reader.GetString(5);
+                        data[6] = reader.GetString(6);
                     }
                 }
                 return data;
