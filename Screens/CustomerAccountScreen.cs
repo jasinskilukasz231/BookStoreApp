@@ -9,7 +9,7 @@ namespace BookStoreApp.Screens
         private List<string> booksIDs = new List<string>();
         private int number_of_books_on_page = 10;
         private int pageNumber = 1;
-        public int buttonNumber = 0;//indicator of buttons
+        public int buttonNumber = 10;//indicator of buttons
         public bool singleBookButtonPressed = false;
         public bool cartButtonPressed { get; set; }
         public bool settingsButtonPressed { get; set; }
@@ -188,6 +188,10 @@ namespace BookStoreApp.Screens
                     //make next page button dissabled
                 }
             }
+        }
+        public int ReturnButtonNumber()
+        {
+            return buttonNumber;
         }
         private void SinglePageBooks0(Object sender, EventArgs e)
         {
