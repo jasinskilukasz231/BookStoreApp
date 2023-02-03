@@ -1,67 +1,131 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace BookStoreApp.Screens
 {
     public class StartingScreen
     {
-        public bool startingScreenRegisterButtonPressed = false;
-        public bool startingScreenStafLoginButtonPressed = false;
+        public bool startingScreenRegisterButtonPressed { get; set; }
+        public bool startingScreenStafLoginButtonPressed { get; set; }
         public bool logged = false;
-        public bool showWrongDataInfo = false;
-        public ButtonClass StartingScreenRegisterButton { get; set; }
-        public ButtonClass StartingScreenStafLoginButton { get; set; }
-        public ButtonClass StartingScreenLoginButton { get; set; }
-        public TextBoxClass StartingScreenTextBoxLogin { get; set; }
-        public TextBoxClass StartingScreenTextBoxPassword { get; set; }
-        public LabelClass StartingScreenLoginLabel { get; set; }
-        public LabelClass StartingScreenPasswordLabel { get; set; }
-        public LabelClass StartingScreenWrongDataLabel { get; set; }
 
+        private ButtonClass registerButton;
+        private ButtonClass stafLoginButton;
+        private ButtonClass loginButton;
+        private TextBoxClass loginTextBox;
+        private TextBoxClass passwordTextBox;
+        private LabelClass loginLabel;
+        private LabelClass passwordLabel;
+        private LabelClass wrongDataLabel;
 
-        public void CreateStartingScreen(int win_x, int win_y)
+        private List<ButtonClass> buttonList;
+        private List<TextBoxClass> textBoxList;
+        private List<LabelClass> labelList;
+
+        public StartingScreen(int win_x, int win_y)
         {
-            StartingScreenRegisterButton = new ButtonClass(win_x / 2, win_y / 2 + 250, 150, 50, "Register");
-            StartingScreenRegisterButton.GetObject().Click += new EventHandler(StartingScreenRegisterButtonClick);
-            StartingScreenRegisterButton.GetObject().Visible = false;
+            buttonList = new List<ButtonClass>();
+            textBoxList = new List<TextBoxClass>();
+            labelList = new List<LabelClass>();
 
-            StartingScreenStafLoginButton = new ButtonClass(win_x / 2, win_y / 2 + 310, 150, 50, "Staf Login");
-            StartingScreenStafLoginButton.GetObject().Click += new EventHandler(StartingScreenStafLoginButtonClick);
-            StartingScreenStafLoginButton.GetObject().Visible = false;
+            registerButton = new ButtonClass(win_x / 2, win_y / 2 + 250, 150, 50, "Register");
+            registerButton.GetObject().Click += new EventHandler(StartingScreenRegisterButtonClick);
+            buttonList.Add(registerButton);
 
-            StartingScreenLoginButton = new ButtonClass(win_x / 2, win_y / 2 + 170, 150, 50, "Login");
-            StartingScreenLoginButton.GetObject().Click += new EventHandler(StartingScreenLoginButtonClick);
-            StartingScreenLoginButton.GetObject().Visible = false;
+            stafLoginButton = new ButtonClass(win_x / 2, win_y / 2 + 310, 150, 50, "Staf Login");
+            stafLoginButton.GetObject().Click += new EventHandler(StartingScreenStafLoginButtonClick);
+            buttonList.Add(stafLoginButton);
 
-            StartingScreenTextBoxLogin = new TextBoxClass(win_x / 2, win_y / 2, 200);
-            StartingScreenTextBoxLogin.GetObject().Font = UtilitiesClass.arial12Regular;
-            StartingScreenTextBoxLogin.GetObject().Visible = false;
+            loginButton = new ButtonClass(win_x / 2, win_y / 2 + 170, 150, 50, "Login");
+            loginButton.GetObject().Click += new EventHandler(StartingScreenLoginButtonClick);
+            buttonList.Add(loginButton);
 
-            StartingScreenTextBoxPassword = new TextBoxClass(win_x / 2, win_y / 2 + 70, 200);
-            StartingScreenTextBoxPassword.GetObject().Font = UtilitiesClass.arial12Regular;
-            StartingScreenTextBoxPassword.GetObject().Visible = false;
+            loginTextBox = new TextBoxClass(win_x / 2, win_y / 2, 200);
+            loginTextBox.GetObject().Font = UtilitiesClass.arial12Regular;
+            textBoxList.Add(loginTextBox);
 
-            StartingScreenLoginLabel = new LabelClass(win_x / 2 - 160, win_y / 2 + 30, "Login", 150, 50);
-            StartingScreenLoginLabel.GetObject().Font = UtilitiesClass.arial12Bold;
-            StartingScreenLoginLabel.GetObject().Visible = false;
+            passwordTextBox = new TextBoxClass(win_x / 2, win_y / 2 + 70, 200);
+            passwordTextBox.GetObject().Font = UtilitiesClass.arial12Regular;
+            textBoxList.Add(passwordTextBox);
 
-            StartingScreenPasswordLabel = new LabelClass(win_x / 2 - 160, win_y / 2 + 100, "Password", 150, 50);
-            StartingScreenPasswordLabel.GetObject().Font = UtilitiesClass.arial12Bold;
-            StartingScreenPasswordLabel.GetObject().Visible = false;
+            loginLabel = new LabelClass(win_x / 2 - 160, win_y / 2 + 30, "Login", 150, 50);
+            loginLabel.GetObject().Font = UtilitiesClass.arial12Bold;
+            labelList.Add(loginLabel);
 
-            StartingScreenWrongDataLabel = new LabelClass(win_x / 2 + 20, win_y / 2 + 120, "Wrong login or password", 150, 30);
-            StartingScreenWrongDataLabel.GetObject().ForeColor = Color.Red;
-            StartingScreenWrongDataLabel.GetObject().Visible = false;
+            passwordLabel = new LabelClass(win_x / 2 - 160, win_y / 2 + 100, "Password", 150, 50);
+            passwordLabel.GetObject().Font = UtilitiesClass.arial12Bold;
+            labelList.Add(passwordLabel);
 
+            wrongDataLabel = new LabelClass(win_x / 2 + 20, win_y / 2 + 120, "Wrong login or password", 150, 30);
+            wrongDataLabel.GetObject().ForeColor = Color.Red;
+            wrongDataLabel.GetObject().Visible = false;
         }
-        public void StartingScreenRegisterButtonClick(object sender, EventArgs e)
+        public void SetVisible(bool value)
+        {
+            if(value == true)
+            {
+                foreach (var i in buttonList)
+                {
+                    i.GetObject().Visible = true;
+                }
+                foreach (var i in textBoxList)
+                {
+                    i.GetObject().Visible = true;
+                }
+                foreach (var i in labelList)
+                {
+                    i.GetObject().Visible = true;
+                }
+            }
+            else
+            {
+                foreach (var i in buttonList)
+                {
+                    i.GetObject().Visible = false;
+                }
+                foreach (var i in textBoxList)
+                {
+                    i.GetObject().Visible = false;
+                }
+                foreach (var i in labelList)
+                {
+                    i.GetObject().Visible = false;
+                }
+                wrongDataLabel.GetObject().Visible = false;
+            }
+        }
+        public List<ButtonClass> GetButtonList()
+        {
+            return buttonList;
+        }
+        public List<TextBoxClass> GetTextBoxList()
+        {
+            return textBoxList;
+        }
+        public List<LabelClass> GetLabelList()
+        {
+            return labelList;
+        }
+        public LabelClass GetWrongDataLabel()
+        {
+            return wrongDataLabel;
+        }
+        public void ClearTextBoxes()
+        {
+            foreach (var i in textBoxList)
+            {
+                i.GetObject().Text = "";
+            }
+        }
+        private void StartingScreenRegisterButtonClick(object sender, EventArgs e)
         {
             startingScreenRegisterButtonPressed = true;
         }
-        public void StartingScreenLoginButtonClick(object sender, EventArgs e)
+        private void StartingScreenLoginButtonClick(object sender, EventArgs e)
         {
-            string query = "SELECT id FROM customers_data WHERE login=" + UtilitiesClass.quoteSign + StartingScreenTextBoxLogin.GetObject().Text
-                + UtilitiesClass.quoteSign + " AND password=" + UtilitiesClass.quoteSign + StartingScreenTextBoxPassword.GetObject().Text + UtilitiesClass.quoteSign;
+            string query = "SELECT id FROM customers_data WHERE login=" + UtilitiesClass.quoteSign + loginTextBox.GetObject().Text
+                + UtilitiesClass.quoteSign + " AND password=" + UtilitiesClass.quoteSign + passwordTextBox.GetObject().Text + UtilitiesClass.quoteSign;
 
             if (Database.FindOneThing(query) != null)
             {
@@ -69,7 +133,7 @@ namespace BookStoreApp.Screens
             }
             else
             {
-                showWrongDataInfo = true;
+                wrongDataLabel.GetObject().Visible = true;
             }
         }
         private void StartingScreenStafLoginButtonClick(object sender, EventArgs e)

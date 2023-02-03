@@ -2,7 +2,7 @@ using System.Windows.Forms;
 
 public class ButtonClass
 {
-    Button button;
+    private Button button;
     
     public Button GetObject()
     {

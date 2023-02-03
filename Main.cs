@@ -12,24 +12,26 @@ namespace BookStoreApp
 {
     public partial class WindowFrame : Form
     {
-        const int win_x = 1262, win_y = 673; //size of the window
-        int whatToRender = 1; //variable that tells which screen should be rendered
+        public const int win_x = 1262, win_y = 673; //size of the window
+        private int whatToRender = 1; //variable that tells which screen should be rendered
+        //big screens only
         //0->nothing
         //1->init all screens
         //2->starting screen
         //3->register screen
+        //4->customer account screen
 
-        //change this 
-        Screens.StartingScreen startingScreen = new Screens.StartingScreen();
-        Screens.RegisterScreen registerScreen = new Screens.RegisterScreen();
-        Screens.RegisterInfoScreen registerInfoScreen = new Screens.RegisterInfoScreen();
-        Screens.CustomerAccountScreen customerAccountScreen = new Screens.CustomerAccountScreen();
+        Screens.StartingScreen startingScreen;
+        Screens.RegisterScreen registerScreen;
+        Screens.RegisterInfoScreen registerInfoScreen;
+        Screens.CustomerAccountScreen customerAccountScreen;
         Screens.SingleBookScreen singleBookScreen;
         Screens.CartScreen cartScreen;
+        Screens.SettingsScreen settingsScreen;
 
         Timer appTimer = new Timer();
-
         int showInfoTimer = 0;
+
         public WindowFrame()
         {
             InitResources();
@@ -46,62 +48,55 @@ namespace BookStoreApp
             switch (whatToRender)
             {
                 case 1: //inits
-                    InitStartingScreen();
-                    InitRegisterScreen();
-                    UtilitiesClass.LoadImages();
-                    InitCustomerAccountScreen();
-                    ShowStartingScreen();
-                    HideRegisterScreen();
-                    HideCustomerAccountScreen();
-                    singleBookScreen = new Screens.SingleBookScreen(win_x, win_y);
-                    cartScreen = new Screens.CartScreen(win_x, win_y);
+                    InitScreens();
                     AddToControls();
                     whatToRender = 0;
                     break;
+                    //here are every possibilities, for example: program can show starting screen at first, after customer account screen(log out button)
                 case 2: //show starting screen
-                    ShowStartingScreen();
-                    HideRegisterScreen();
-                    HideCartScreen();
-                    HideCustomerAccountScreen();
-                    HideSettingsScreen();
-                    HideSingleBookScreen();
+                    startingScreen.ClearTextBoxes();
+                    registerInfoScreen.SetVisible(false);
+                    startingScreen.SetVisible(true);
+                    customerAccountScreen.SetVisible(false);
                     whatToRender = 0;
                     break;
                 case 3: //show register screen
-                    ShowRegisterScreen();
-                    HideStartingScreen();
-                    HideCartScreen();
-                    HideCustomerAccountScreen();
-                    HideSettingsScreen();
-                    HideSingleBookScreen();
+                    startingScreen.SetVisible(false);
+                    registerScreen.SetVisible(true);
                     whatToRender = 0;
                     break;
                 case 4: //show customer account screen
-                    HideStartingScreen();
-                    HideCartScreen();
-                    ShowCustomerAccountScreen();
-                    HideRegisterScreen();
-                    HideSettingsScreen();
-                    HideSingleBookScreen();
+                    startingScreen.SetVisible(false);
+                    customerAccountScreen.SetVisible(true);
+                    settingsScreen.SetVisible(false);
+                    cartScreen.SetVisible(false);
+                    singleBookScreen.SetVisible(false);
                     whatToRender = 0;
                     break;
-                case 5: //info screen
-                    registerInfoScreen.infoLabel.GetObject().Visible = true;
+                case 5: //register info screen
+                    registerScreen.SetVisible(false);
+                    registerInfoScreen.SetVisible(true);
                     showInfoTimer++;
-                    if(showInfoTimer>=60)
+                    if(showInfoTimer>=60)//register info screen time
                     {
                         whatToRender = 4;
+                        registerInfoScreen.SetVisible(false);
                         showInfoTimer = 0;
-                        registerInfoScreen.infoLabel.GetObject().Visible = false;
                     }
                     break;
                 case 6://cart screen
-                    HideStartingScreen();
-                    ShowCartScreen();
-                    HideCustomerAccountScreen();
-                    HideRegisterScreen();
-                    HideSettingsScreen();
-                    HideSingleBookScreen();
+                    customerAccountScreen.SetVisible(false);
+                    cartScreen.SetVisible(true);
+                    whatToRender = 0;
+                    break;
+                case 7: //settings screen
+                    customerAccountScreen.SetVisible(false);
+                    settingsScreen.SetVisible(true);
+                    whatToRender = 0;
+                    break;
+                case 8: //single book screen
+                    customerAccountScreen.SetVisible(false);
+                    singleBookScreen.SetVisible(true);
                     whatToRender = 0;
                     break;
                 default: 
@@ -116,48 +111,23 @@ namespace BookStoreApp
                         startingScreen.logged = false;
                         whatToRender = 4;
                     }
-                    if (startingScreen.showWrongDataInfo == true)
-                    {
-                        startingScreen.showWrongDataInfo = false;
-                        startingScreen.StartingScreenWrongDataLabel.GetObject().Visible = true;
-                    }
                     //register screen
-                    if (registerScreen.registerButtonPressed == true) 
+                    if(registerScreen.registered==true)
                     {
-                        registerScreen.registerButtonPressed = false;
-                        if(registerScreen.Register()=="missingData")
-                        {
-                            MessageBox.Show("Please enter all required data", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        else if(registerScreen.Register()== "wrongPasswordLogin")
-                        {
-                            MessageBox.Show("Password or login is too long or too short", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        else if (registerScreen.Register() == "loginTaken")
-                        {
-                            MessageBox.Show("Your login is taken", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        else if(registerScreen.Register() == "registered")//registered
-                        {
-                            whatToRender = 5;
-                            registerInfoScreen.createInfoScreen(win_x, win_y);
-                            HideRegisterScreen();
-                        }
+                        registerScreen.registered = false;
+                        whatToRender = 5;
                     }
+
                     //customerAccount screen
                     if (customerAccountScreen.logOutButtonPressed == true)
                     {
-                        HideCustomerAccountScreen();
-                        ShowStartingScreen();
-                        startingScreen.StartingScreenTextBoxLogin.GetObject().Text = "";
-                        startingScreen.StartingScreenTextBoxPassword.GetObject().Text = "";
                         customerAccountScreen.logOutButtonPressed = false;
+                        whatToRender = 2;
                     }
                     if (customerAccountScreen.settingsButtonPressed == true)
                     {
-                        HideCustomerAccountScreen();
-                        ShowSettingsScreen();
                         customerAccountScreen.settingsButtonPressed = false;
+                        whatToRender = 7;
                     }
                     if (customerAccountScreen.cartButtonPressed == true) 
                     {
@@ -171,17 +141,15 @@ namespace BookStoreApp
                     {
                         customerAccountScreen.singleBookButtonPressed = false;
                         string query = "SELECT displayTitle, autor, year, nr_pages, price, possible_to_loan, imageName FROM books WHERE id=" +
-                            (customerAccountScreen.singlePageBooks[customerAccountScreen.buttonNumber].bookId);
+                            customerAccountScreen.GetSinglePageBooksList()[customerAccountScreen.buttonNumber].bookId;
                         string[] data = Database.FindBookData(query);
                         singleBookScreen.SetParams(data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
-                        HideCustomerAccountScreen();
-                        ShowSingleBookScreen();
+                        whatToRender = 8;
                     }
                     if(singleBookScreen.backButtonPressed==true)
                     {
                         singleBookScreen.backButtonPressed = false;
-                        HideSingleBookScreen();
-                        ShowCustomerAccountScreen();
+                        whatToRender = 4;
                     }
                     if(singleBookScreen.addToCartButtonPressed==true)
                     {
@@ -191,7 +159,7 @@ namespace BookStoreApp
                             //if add to cart button is pressed
                             //add to booksIds
                             //check id of book that hides on certain button 
-                            cartScreen.booksIdsInCart.Add(customerAccountScreen.singlePageBooks[customerAccountScreen.buttonNumber].bookId);
+                            cartScreen.GetBooksIdsInCartList().Add(customerAccountScreen.GetSinglePageBooksList()[customerAccountScreen.buttonNumber].bookId);
                             customerAccountScreen.buttonNumber = 10;
                         }
                         MessageBox.Show("Book added to cart");
@@ -209,282 +177,117 @@ namespace BookStoreApp
                     break;
             }
         }
-        private void InitStartingScreen()
+        private void InitScreens()
         {
-            startingScreen.CreateStartingScreen(win_x, win_y);
-            Controls.Add(startingScreen.StartingScreenRegisterButton.GetObject());
-            Controls.Add(startingScreen.StartingScreenStafLoginButton.GetObject());
-            Controls.Add(startingScreen.StartingScreenLoginButton.GetObject());
-            Controls.Add(startingScreen.StartingScreenTextBoxLogin.GetObject());
-            Controls.Add(startingScreen.StartingScreenTextBoxPassword.GetObject());
-            Controls.Add(startingScreen.StartingScreenLoginLabel.GetObject());
-            Controls.Add(startingScreen.StartingScreenPasswordLabel.GetObject());
-            Controls.Add(startingScreen.StartingScreenWrongDataLabel.GetObject());
+            UtilitiesClass.LoadImages();
+
+            startingScreen = new Screens.StartingScreen(win_x, win_y);
+            startingScreen.SetVisible(true);
+            registerScreen = new Screens.RegisterScreen(win_x, win_y);
+            registerScreen.SetVisible(false);
+            customerAccountScreen = new Screens.CustomerAccountScreen(win_x, win_y);
+            customerAccountScreen.SetVisible(false);
+            registerInfoScreen = new Screens.RegisterInfoScreen(win_x, win_y);
+            registerInfoScreen.SetVisible(false);
+            settingsScreen = new Screens.SettingsScreen(win_x, win_y);
+            settingsScreen.SetVisible(false);
+            singleBookScreen = new Screens.SingleBookScreen(win_x, win_y);
+            singleBookScreen.SetVisible(false);
+            cartScreen = new Screens.CartScreen(win_x, win_y);
+            cartScreen.SetVisible(false);
         }
-        private void HideStartingScreen()
+        private void AddToControls()
         {
-            startingScreen.StartingScreenRegisterButton.GetObject().Visible = false;
-            startingScreen.StartingScreenStafLoginButton.GetObject().Visible = false;
-            startingScreen.StartingScreenLoginButton.GetObject().Visible = false;
-            startingScreen.StartingScreenTextBoxLogin.GetObject().Visible = false;
-            startingScreen.StartingScreenTextBoxPassword.GetObject().Visible = false;
-            startingScreen.StartingScreenLoginLabel.GetObject().Visible = false;
-            startingScreen.StartingScreenPasswordLabel.GetObject().Visible = false;
-            startingScreen.StartingScreenWrongDataLabel.GetObject().Visible = false;
-        }
-        private void ShowStartingScreen()
-        {
-            startingScreen.StartingScreenRegisterButton.GetObject().Visible = true;
-            startingScreen.StartingScreenStafLoginButton.GetObject().Visible = true;
-            startingScreen.StartingScreenLoginButton.GetObject().Visible = true;
-            startingScreen.StartingScreenTextBoxLogin.GetObject().Visible = true;
-            startingScreen.StartingScreenTextBoxPassword.GetObject().Visible = true;
-            startingScreen.StartingScreenLoginLabel.GetObject().Visible = true;
-            startingScreen.StartingScreenPasswordLabel.GetObject().Visible = true;
-        }
-        private void InitRegisterScreen()
-        {
-            registerScreen.CreateRegisterScreen(win_x,win_y);
-            Controls.Add(registerScreen.RegisterScreenRegisterButton.GetObject());
-            Controls.Add(registerScreen.RegisterScreenNameTextBox.GetObject());
-            Controls.Add(registerScreen.RegisterScreenLastNameTextBox.GetObject());
-            Controls.Add(registerScreen.RegisterScreenEmailTextBox.GetObject());
-            Controls.Add(registerScreen.RegisterScreenPhoneTextBox.GetObject());
-            Controls.Add(registerScreen.RegisterScreenAddressTextBox.GetObject());
-            Controls.Add(registerScreen.RegisterScreenLoginTextBox.GetObject());
-            Controls.Add(registerScreen.RegisterScreenPasswordTextBox.GetObject());
-            Controls.Add(registerScreen.RegisterScreenNameLabel.GetObject());
-            Controls.Add(registerScreen.RegisterScreenLastNameLabel.GetObject());
-            Controls.Add(registerScreen.RegisterScreenEmailLabel.GetObject());
-            Controls.Add(registerScreen.RegisterScreenPhoneLabel.GetObject());
-            Controls.Add(registerScreen.RegisterScreenAddressLabel.GetObject());
-            Controls.Add(registerScreen.RegisterScreenSexLabel.GetObject());
-            Controls.Add(registerScreen.RegisterScreenLoginLabel.GetObject());
-            Controls.Add(registerScreen.RegisterScreenPasswordLabel.GetObject());
-            Controls.Add(registerScreen.RegisterScreenManLabel.GetObject());
-            Controls.Add(registerScreen.RegisterScreenWomanLabel.GetObject());
-            Controls.Add(registerScreen.RegisterScreenOtherLabel.GetObject());
-            Controls.Add(registerScreen.registerScreenOtherCheckBox.GetObject());
-            Controls.Add(registerScreen.registerScreenManCheckBox.GetObject());
-            Controls.Add(registerScreen.registerScreenWomanCheckBox.GetObject());
-        }
-        private void ShowRegisterScreen()
-        {
-            registerScreen.RegisterScreenRegisterButton.GetObject().Visible = true;
-            registerScreen.RegisterScreenNameTextBox.GetObject().Visible = true;
-            registerScreen.RegisterScreenLastNameTextBox.GetObject().Visible = true;
-            registerScreen.RegisterScreenEmailTextBox.GetObject().Visible = true;
-            registerScreen.RegisterScreenPhoneTextBox.GetObject().Visible = true;
-            registerScreen.RegisterScreenAddressTextBox.GetObject().Visible = true;
-            registerScreen.RegisterScreenLoginTextBox.GetObject().Visible = true;
-            registerScreen.RegisterScreenPasswordTextBox.GetObject().Visible = true;
-            registerScreen.RegisterScreenNameLabel.GetObject().Visible = true;
-            registerScreen.RegisterScreenLastNameLabel.GetObject().Visible = true;
-            registerScreen.RegisterScreenEmailLabel.GetObject().Visible = true;
-            registerScreen.RegisterScreenPhoneLabel.GetObject().Visible = true;
-            registerScreen.RegisterScreenAddressLabel.GetObject().Visible = true;
-            registerScreen.RegisterScreenSexLabel.GetObject().Visible = true;
-            registerScreen.RegisterScreenLoginLabel.GetObject().Visible = true;
-            registerScreen.RegisterScreenPasswordLabel.GetObject().Visible = true;
-            registerScreen.registerScreenOtherCheckBox.GetObject().Visible = true;
-            registerScreen.registerScreenManCheckBox.GetObject().Visible = true;
-            registerScreen.registerScreenWomanCheckBox.GetObject().Visible = true;
-            registerScreen.RegisterScreenManLabel.GetObject().Visible = true;
-            registerScreen.RegisterScreenWomanLabel.GetObject().Visible = true;
-            registerScreen.RegisterScreenOtherLabel.GetObject().Visible = true;
-        }
-        private void HideRegisterScreen()
-        {
-            registerScreen.RegisterScreenRegisterButton.GetObject().Visible = false;
-            registerScreen.RegisterScreenNameTextBox.GetObject().Visible = false;
-            registerScreen.RegisterScreenLastNameTextBox.GetObject().Visible = false;
-            registerScreen.RegisterScreenEmailTextBox.GetObject().Visible = false;
-            registerScreen.RegisterScreenPhoneTextBox.GetObject().Visible = false;
-            registerScreen.RegisterScreenAddressTextBox.GetObject().Visible = false;
-            registerScreen.RegisterScreenLoginTextBox.GetObject().Visible = false;
-            registerScreen.RegisterScreenPasswordTextBox.GetObject().Visible = false;
-            registerScreen.RegisterScreenNameLabel.GetObject().Visible = false;
-            registerScreen.RegisterScreenLastNameLabel.GetObject().Visible = false;
-            registerScreen.RegisterScreenEmailLabel.GetObject().Visible = false;
-            registerScreen.RegisterScreenPhoneLabel.GetObject().Visible = false;
-            registerScreen.RegisterScreenAddressLabel.GetObject().Visible = false;
-            registerScreen.RegisterScreenSexLabel.GetObject().Visible = false;
-            registerScreen.RegisterScreenLoginLabel.GetObject().Visible = false;
-            registerScreen.RegisterScreenPasswordLabel.GetObject().Visible = false;
-            registerScreen.registerScreenOtherCheckBox.GetObject().Visible = false;
-            registerScreen.registerScreenManCheckBox.GetObject().Visible = false;
-            registerScreen.registerScreenWomanCheckBox.GetObject().Visible = false;
-            registerScreen.RegisterScreenManLabel.GetObject().Visible = false;
-            registerScreen.RegisterScreenWomanLabel.GetObject().Visible = false;
-            registerScreen.RegisterScreenOtherLabel.GetObject().Visible = false;
-        }
-        private void InitCustomerAccountScreen()
-        {
-            customerAccountScreen.CreateCustomerAccountScreen(win_x, win_y);
-            Controls.Add(customerAccountScreen.cartButton.GetObject());
-            Controls.Add(customerAccountScreen.settingsButton.GetObject());
-            Controls.Add(customerAccountScreen.logOutButton.GetObject());
-            Controls.Add(customerAccountScreen.searchButton.GetObject());
-            Controls.Add(customerAccountScreen.searchTextBox.GetObject());
-            Controls.Add(customerAccountScreen.nextPageButton.GetObject());
-            Controls.Add(customerAccountScreen.prevPageButton.GetObject());
-            foreach (var i in customerAccountScreen.singlePageBooks)
+            //starting screen
+            foreach (var i in startingScreen.GetButtonList())
+            {
+                Controls.Add(i.GetObject());
+            }
+            foreach (var i in startingScreen.GetTextBoxList())
+            {
+                Controls.Add(i.GetObject());
+            }
+            foreach (var i in startingScreen.GetLabelList())
+            {
+                Controls.Add(i.GetObject());
+            }
+            Controls.Add(startingScreen.GetWrongDataLabel().GetObject());
+
+            //register screen
+            foreach (var i in registerScreen.GetButtonList())
+            {
+                Controls.Add(i.GetObject());
+            }
+            foreach (var i in registerScreen.GetTextBoxList())
+            {
+                Controls.Add(i.GetObject());
+            }
+            foreach (var i in registerScreen.GetLabelList())
+            {
+                Controls.Add(i.GetObject());
+            }
+            foreach (var i in registerScreen.GetCheckBoxList())
+            {
+                Controls.Add(i.GetObject());
+            }
+            //register info screen
+            Controls.Add(registerInfoScreen.getLabel().GetObject());
+
+            //customers accont screen 
+            foreach (var i in customerAccountScreen.GetButtonList())
+            {
+                Controls.Add(i.GetObject());
+            }
+            foreach (var i in customerAccountScreen.GetTextBoxList())
+            {
+                Controls.Add(i.GetObject());
+            }
+            foreach (var i in customerAccountScreen.GetSinglePageBooksList())
             {
                 Controls.Add(i.GetButtonObj().GetObject());
                 Controls.Add(i.GetTtleObj().GetObject());
                 Controls.Add(i.GetPriceObj().GetObject());
             }
-        }
-        private void ShowCustomerAccountScreen()
-        {
-            customerAccountScreen.cartButton.GetObject().Visible = true;
-            customerAccountScreen.settingsButton.GetObject().Visible = true;
-            customerAccountScreen.logOutButton.GetObject().Visible = true;
-            customerAccountScreen.searchButton.GetObject().Visible = true;
-            customerAccountScreen.searchTextBox.GetObject().Visible = true;
-        }
-        private void HideCustomerAccountScreen()
-        {
-            customerAccountScreen.cartButton.GetObject().Visible = false;
-            customerAccountScreen.settingsButton.GetObject().Visible = false;
-            customerAccountScreen.logOutButton.GetObject().Visible = false;
-            customerAccountScreen.searchButton.GetObject().Visible = false;
-            customerAccountScreen.searchTextBox.GetObject().Visible = false;
-            customerAccountScreen.nextPageButton.GetObject().Visible = false;
-            customerAccountScreen.prevPageButton.GetObject().Visible = false;
-            for (int i = 0; i < 10; i++)
-            {
-                customerAccountScreen.singlePageBooks[i].GetButtonObj().GetObject().Visible = false;
-                customerAccountScreen.singlePageBooks[i].GetPriceObj().GetObject().Visible = false;
-                customerAccountScreen.singlePageBooks[i].GetTtleObj().GetObject().Visible = false;
-            }
-        }
-        private void InitSettingsScreen()
-        {
 
-        }
-        private void ShowSettingsScreen()
-        {
-
-        }
-        private void HideSettingsScreen()
-        {
-
-        }
-        private void ShowCartScreen()
-        {
-            cartScreen.backButton.GetObject().Visible = true;
-            cartScreen.orderButton.GetObject().Visible = true;
-            cartScreen.headerLabel1.GetObject().Visible = true;
-            cartScreen.headerLabel2.GetObject().Visible = true;
-            cartScreen.headerLabel3.GetObject().Visible = true;
-            foreach (var i in cartScreen.titles)
-            {
-                i.GetObject().Visible = true;
-            }
-            foreach (var i in cartScreen.images)
-            {
-                i.Visible = true;
-            }
-            foreach (var i in cartScreen.prices)
-            {
-                i.GetObject().Visible = true;
-            }
-            foreach (var i in cartScreen.numberField)
-            {
-                i.GetObject().Visible = true;
-            }
-        }
-        private void HideCartScreen()
-        {
-            cartScreen.backButton.GetObject().Visible = false;
-            cartScreen.orderButton.GetObject().Visible = false;
-            cartScreen.headerLabel1.GetObject().Visible = false;
-            cartScreen.headerLabel2.GetObject().Visible = false;
-            cartScreen.headerLabel3.GetObject().Visible = false;
-            foreach (var i in cartScreen.titles)
-            {
-                i.GetObject().Visible = false;
-            }
-            foreach (var i in cartScreen.images)
-            {
-                i.Visible = false;
-            }
-            foreach (var i in cartScreen.prices)
-            {
-                i.GetObject().Visible = false;
-            }
-            foreach (var i in cartScreen.numberField)
-            {
-                i.GetObject().Visible = false;
-            }
-        }
-
-        private void ShowSingleBookScreen()
-        {
-            singleBookScreen.title.GetObject().Visible = true;
-            singleBookScreen.autor.GetObject().Visible = true;
-            singleBookScreen.year.GetObject().Visible = true;
-            singleBookScreen.pages.GetObject().Visible = true;
-            singleBookScreen.price.GetObject().Visible = true;
-            singleBookScreen.loan.GetObject().Visible = true;
-            singleBookScreen.addToCart.GetObject().Visible = true;
-            singleBookScreen.backButton.GetObject().Visible = true;
-            singleBookScreen.loan.GetObject().Visible = true;
-            singleBookScreen.bookPicture.Visible = true;
-        }
-        private void HideSingleBookScreen()
-        {
-            singleBookScreen.title.GetObject().Visible = false;
-            singleBookScreen.autor.GetObject().Visible = false;
-            singleBookScreen.year.GetObject().Visible = false;
-            singleBookScreen.pages.GetObject().Visible = false;
-            singleBookScreen.price.GetObject().Visible = false;
-            singleBookScreen.loan.GetObject().Visible = false;
-            singleBookScreen.addToCart.GetObject().Visible = false;
-            singleBookScreen.backButton.GetObject().Visible = false;
-            singleBookScreen.loan.GetObject().Visible = false;
-            singleBookScreen.bookPicture.Visible = false;
-        }
-        private void AddToControls()
-        {
             //single book screen
-            Controls.Add(singleBookScreen.title.GetObject());
-            Controls.Add(singleBookScreen.autor.GetObject());
-            Controls.Add(singleBookScreen.year.GetObject());
-            Controls.Add(singleBookScreen.pages.GetObject());
-            Controls.Add(singleBookScreen.price.GetObject());
-            Controls.Add(singleBookScreen.loan.GetObject());
-            Controls.Add(singleBookScreen.addToCart.GetObject());
-            Controls.Add(singleBookScreen.backButton.GetObject());
-            Controls.Add(singleBookScreen.loan.GetObject());
-            Controls.Add(singleBookScreen.bookPicture);
+            foreach (var i in singleBookScreen.GetButtonList())
+            {
+                Controls.Add(i.GetObject());
+            }
+            foreach (var i in singleBookScreen.GetLabelList())
+            {
+                Controls.Add(i.GetObject());
+            }
+            Controls.Add(singleBookScreen.GetPictureObject().GetObject());
 
             //cart screen
-            Controls.Add(cartScreen.backButton.GetObject());
-            Controls.Add(cartScreen.orderButton.GetObject());
-            Controls.Add(cartScreen.headerLabel1.GetObject());
-            Controls.Add(cartScreen.headerLabel2.GetObject());
-            Controls.Add(cartScreen.headerLabel3.GetObject());
+            foreach (var i in cartScreen.GetButtonList())
+            {
+                Controls.Add(i.GetObject());
+            }
+            foreach (var i in cartScreen.GetLabelList())
+            {
+                Controls.Add(i.GetObject());
+            }
         }
         private void AddCartScreenItemsToControls()
         {
-            foreach (var i in cartScreen.titles)
+            foreach (var i in cartScreen.GetTitlesList())
             {
                 Controls.Add(i.GetObject());
             }
-            foreach (var i in cartScreen.images)
-            {
-                Controls.Add(i);
-            }
-            foreach (var i in cartScreen.prices)
+            foreach (var i in cartScreen.GetImagesList())
             {
                 Controls.Add(i.GetObject());
             }
-            foreach (var i in cartScreen.numberField)
+            foreach (var i in cartScreen.GetPricesList())
             {
                 Controls.Add(i.GetObject());
-            }            
+            }
+            foreach (var i in cartScreen.GetTextBoxList())
+            {
+                Controls.Add(i.GetObject());
+            }
         }
     }
 }

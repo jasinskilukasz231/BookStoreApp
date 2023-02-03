@@ -6,6 +6,8 @@ namespace BookStoreApp.Screens
 {
     public class CustomerAccountScreen
     {
+        private string id_of_books_in_cart;
+
         private List<string> booksIDs = new List<string>();
         private int number_of_books_on_page = 10;
         private int pageNumber = 1;
@@ -15,28 +17,49 @@ namespace BookStoreApp.Screens
         public bool settingsButtonPressed { get; set; }
         public bool searchButtonPressed { get; set; }
         public bool logOutButtonPressed { get; set; }
-        public ButtonClass cartButton { get; set; }
-        public ButtonClass settingsButton { get; set; }
-        public ButtonClass searchButton { get; set; }
-        public ButtonClass logOutButton { get; set; }
-        public TextBoxClass searchTextBox { get; set; }
-        public List<SingleBook> singlePageBooks = new List<SingleBook>();
-        public ButtonClass nextPageButton { get; set; }
-        public ButtonClass prevPageButton { get; set; }
 
-        public void CreateCustomerAccountScreen(int win_x, int win_y)
+        private ButtonClass cartButton;
+        private ButtonClass settingsButton;
+        private ButtonClass searchButton;
+        private ButtonClass logOutButton;
+        private ButtonClass nextPageButton;
+        private ButtonClass prevPageButton;
+        private TextBoxClass searchTextBox;
+
+        private List<ButtonClass> buttonList;
+        private List<TextBoxClass> textBoxList;
+        private List<SingleBook> singlePageBooksList;
+
+        public CustomerAccountScreen(int win_x, int win_y)
         {
+            textBoxList = new List<TextBoxClass>();
+            buttonList = new List<ButtonClass>();
+
             cartButton = new ButtonClass(win_x - 150, 30, 50, 50, "");
             cartButton.GetObject().Click += new EventHandler(CartButtonClick);
+            buttonList.Add(cartButton);
 
             settingsButton = new ButtonClass(win_x - 100, 30, 50, 50, "");
             settingsButton.GetObject().Click += new EventHandler(settingsButtonClick);
+            buttonList.Add(settingsButton);
 
             searchButton = new ButtonClass(win_x / 2, 30, 50, 50, "");
             searchButton.GetObject().Click += new EventHandler(searchButtonClick);
+            buttonList.Add(searchButton);
 
             logOutButton = new ButtonClass(win_x - 50, 30, 50, 50, "");
             logOutButton.GetObject().Click += new EventHandler(logOutButtonClick);
+            buttonList.Add(logOutButton);
+
+            nextPageButton = new ButtonClass(win_x - 200, win_y - 50, 170, 50, "Next Page");
+            nextPageButton.GetObject().Font = UtilitiesClass.arial12Regular;
+            nextPageButton.GetObject().Click += new EventHandler(nextPageButtonClick);
+            buttonList.Add(nextPageButton);
+
+            prevPageButton = new ButtonClass(200, win_y - 50, 170, 50, "Previous Page");
+            prevPageButton.GetObject().Click += new EventHandler(prevPageButtonClick);
+            prevPageButton.GetObject().Font = UtilitiesClass.arial12Regular;
+            buttonList.Add(prevPageButton);
 
             cartButton.GetObject().BackgroundImage = UtilitiesClass.images["cart"];
             logOutButton.GetObject().BackgroundImage = UtilitiesClass.images["logout"];
@@ -45,32 +68,73 @@ namespace BookStoreApp.Screens
 
             searchTextBox = new TextBoxClass(win_x / 2 - 130, 15, 200);
             searchTextBox.GetObject().Font = UtilitiesClass.arial12Regular;
+            textBoxList.Add(searchTextBox);
 
-            nextPageButton = new ButtonClass(win_x - 200, win_y - 50, 170, 50, "Next Page");
-            nextPageButton.GetObject().Font = UtilitiesClass.arial12Regular;    
-            nextPageButton.GetObject().Click += new EventHandler(nextPageButtonClick);
-
-            prevPageButton = new ButtonClass(200, win_y - 50, 170, 50, "Previous Page");
-            prevPageButton.GetObject().Click += new EventHandler(prevPageButtonClick);
-            prevPageButton.GetObject().Font = UtilitiesClass.arial12Regular;
+            singlePageBooksList = new List<SingleBook>();
 
             int starting_pos_y = 100;
             int gap = 80;
             for (int i = 0; i < number_of_books_on_page; i++)
             {
-                singlePageBooks.Add(new SingleBook(300, starting_pos_y + gap * i));
+                singlePageBooksList.Add(new SingleBook(300, starting_pos_y + gap * i));
             }
 
-            singlePageBooks[0].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks0);
-            singlePageBooks[1].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks1);
-            singlePageBooks[2].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks2);
-            singlePageBooks[3].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks3);
-            singlePageBooks[4].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks4);
-            singlePageBooks[5].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks5);
-            singlePageBooks[6].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks6);
-            singlePageBooks[7].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks7);
-            singlePageBooks[8].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks8);
-            singlePageBooks[9].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks9);
+            singlePageBooksList[0].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks0);
+            singlePageBooksList[1].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks1);
+            singlePageBooksList[2].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks2);
+            singlePageBooksList[3].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks3);
+            singlePageBooksList[4].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks4);
+            singlePageBooksList[5].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks5);
+            singlePageBooksList[6].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks6);
+            singlePageBooksList[7].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks7);
+            singlePageBooksList[8].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks8);
+            singlePageBooksList[9].GetButtonObj().GetObject().Click += new EventHandler(SinglePageBooks9);
+        }
+        public void SetVisible(bool value)
+        {
+            //clearing text
+            searchTextBox.GetObject().Text = "";
+
+            if (value == true)
+            {
+                foreach (var i in buttonList)
+                {
+                    i.GetObject().Visible = true;
+                }
+                foreach (var i in textBoxList)
+                {
+                    i.GetObject().Visible = true;
+                }
+            }
+            else
+            {
+                foreach (var i in buttonList)
+                {
+                    i.GetObject().Visible = false;
+                }
+                foreach (var i in textBoxList)
+                {
+                    i.GetObject().Visible = false;
+                }
+                foreach (var i in singlePageBooksList)
+                {
+                    i.GetButtonObj().GetObject().Visible = false;
+                    i.GetTtleObj().GetObject().Visible = false;
+                    i.GetPriceObj().GetObject().Visible = false;
+                }
+            }
+        }
+        public List<ButtonClass> GetButtonList()
+        {
+            return buttonList;
+        }
+        public List<TextBoxClass> GetTextBoxList()
+        {
+            return textBoxList;
+        }
+        public List<SingleBook> GetSinglePageBooksList()
+        {
+            return singlePageBooksList;
         }
         private void CartButtonClick(object sender, EventArgs e)
         {
@@ -88,13 +152,11 @@ namespace BookStoreApp.Screens
                 nextPageButton.GetObject().Visible = true;
                 prevPageButton.GetObject().Visible = true;
                 string[] idss = UtilitiesClass.RemoveSameNumbers(FindBooks(searchTextBox.GetObject().Text).Split(',')).Split(',');
-                //CAN CAUSE ERRORS !!!!!!!!!!!!!!!!
                 booksIDs.Clear();
                 foreach (var i in idss)
                 {
                     booksIDs.Add(i);
                 }
-                //////////////
 
                 pageNumber = 1;
                 AssignBooksData(pageNumber, booksIDs);
@@ -157,8 +219,8 @@ namespace BookStoreApp.Screens
                     string imageDir = UtilitiesClass.booksImagesDir + Database.FindOneThing("SELECT imageName FROM books WHERE id=" + booksIds[i]);
                     Bitmap image = new Bitmap(Image.FromFile(imageDir), new Size(70, 70));
 
-                    singlePageBooks[i].setParams(int.Parse(booksIds[i]), image, title_query, price_query);
-                    singlePageBooks[i].setVisible(true);
+                    singlePageBooksList[i].setParams(int.Parse(booksIds[i]), image, title_query, price_query);
+                    singlePageBooksList[i].setVisible(true);
                 }
             }
             else if (booksIds.Count < pageNr * number_of_books_on_page)
@@ -167,7 +229,7 @@ namespace BookStoreApp.Screens
                 {
                     for (int i = 0; i < number_of_books_on_page; i++)
                     {
-                        singlePageBooks[i].setVisible(false);
+                        singlePageBooksList[i].setVisible(false);
                     }
                     //assign books beggining (pageNumber - 1) * 10, end size - 1
                     for (int i = (pageNumber - 1) * number_of_books_on_page; i < booksIds.Count - 1; i++)
@@ -178,8 +240,8 @@ namespace BookStoreApp.Screens
                         string imageDir = UtilitiesClass.booksImagesDir + Database.FindOneThing("SELECT imageName FROM books WHERE id=" + booksIds[i]);
                         Bitmap image = new Bitmap(Image.FromFile(imageDir), new Size(70, 70));
 
-                        singlePageBooks[i].setParams(int.Parse(booksIds[i]), image, title_query, price_query);
-                        singlePageBooks[i].setVisible(true);
+                        singlePageBooksList[i].setParams(int.Parse(booksIds[i]), image, title_query, price_query);
+                        singlePageBooksList[i].setVisible(true);
                     }
                 }
                 else
