@@ -6,8 +6,6 @@ namespace BookStoreApp.Screens
 {
     public class CustomerAccountScreen
     {
-        private string id_of_books_in_cart;
-
         private List<string> booksIDs = new List<string>();
         private int number_of_books_on_page = 10;
         private int pageNumber = 1;
@@ -146,13 +144,14 @@ namespace BookStoreApp.Screens
         }
         private void searchButtonClick(object sender, EventArgs e)
         {
-            if (searchTextBox.GetObject().Text != "")
+            if (searchTextBox.GetObject().Text != "") 
             {
                 searchButtonPressed = true;
                 nextPageButton.GetObject().Visible = true;
                 prevPageButton.GetObject().Visible = true;
                 string[] idss = UtilitiesClass.RemoveSameNumbers(FindBooks(searchTextBox.GetObject().Text).Split(',')).Split(',');
                 booksIDs.Clear();
+
                 foreach (var i in idss)
                 {
                     booksIDs.Add(i);
@@ -213,26 +212,7 @@ namespace BookStoreApp.Screens
                 //assign 10 books, begining (pageNumber - 1) * 10
                 for (int i = (pageNumber - 1) * number_of_books_on_page; i < pageNumber * number_of_books_on_page - 1; i++)
                 {
-                    string title_query = Database.FindOneThing("SELECT displayTitle FROM books WHERE id=" + booksIds[i]);
-                    string price_query = Database.FindOneThing("SELECT price FROM books WHERE id=" + booksIds[i]);
-
-                    string imageDir = UtilitiesClass.booksImagesDir + Database.FindOneThing("SELECT imageName FROM books WHERE id=" + booksIds[i]);
-                    Bitmap image = new Bitmap(Image.FromFile(imageDir), new Size(70, 70));
-
-                    singlePageBooksList[i].setParams(int.Parse(booksIds[i]), image, title_query, price_query);
-                    singlePageBooksList[i].setVisible(true);
-                }
-            }
-            else if (booksIds.Count < pageNr * number_of_books_on_page)
-            {
-                if (booksIds.Count > (pageNr - 1) * number_of_books_on_page)
-                {
-                    for (int i = 0; i < number_of_books_on_page; i++)
-                    {
-                        singlePageBooksList[i].setVisible(false);
-                    }
-                    //assign books beggining (pageNumber - 1) * 10, end size - 1
-                    for (int i = (pageNumber - 1) * number_of_books_on_page; i < booksIds.Count - 1; i++)
+                    if (booksIds[i] != "")
                     {
                         string title_query = Database.FindOneThing("SELECT displayTitle FROM books WHERE id=" + booksIds[i]);
                         string price_query = Database.FindOneThing("SELECT price FROM books WHERE id=" + booksIds[i]);
@@ -242,6 +222,32 @@ namespace BookStoreApp.Screens
 
                         singlePageBooksList[i].setParams(int.Parse(booksIds[i]), image, title_query, price_query);
                         singlePageBooksList[i].setVisible(true);
+                    }
+                }
+            }
+            else if (booksIds.Count < pageNr * number_of_books_on_page)
+            {
+                if (booksIds.Count > (pageNr - 1) * number_of_books_on_page)
+                {
+
+                    for (int i = 0; i < number_of_books_on_page; i++)
+                    {
+                        singlePageBooksList[i].setVisible(false);
+                    }
+                    //assign books beggining (pageNumber - 1) * 10, end size - 1
+                    for (int i = (pageNumber - 1) * number_of_books_on_page; i < booksIds.Count - 1; i++)
+                    {
+                        if (booksIds[i] != "")
+                        {
+                            string title_query = Database.FindOneThing("SELECT displayTitle FROM books WHERE id=" + booksIds[i]);
+                            string price_query = Database.FindOneThing("SELECT price FROM books WHERE id=" + booksIds[i]);
+
+                            string imageDir = UtilitiesClass.booksImagesDir + Database.FindOneThing("SELECT imageName FROM books WHERE id=" + booksIds[i]);
+                            Bitmap image = new Bitmap(Image.FromFile(imageDir), new Size(70, 70));
+
+                            singlePageBooksList[i].setParams(int.Parse(booksIds[i]), image, title_query, price_query);
+                            singlePageBooksList[i].setVisible(true);
+                        }
                     }
                 }
                 else

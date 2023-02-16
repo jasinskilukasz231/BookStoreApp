@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "MnnBKW65rEUvPhVSAeeZ0tb7Un7BBXZ9PMEqlX+tIPspqJyPUaSvPrpnGWji9qoYBOmWrbJ9jN8Iqd+QDu4d3g==",
+  "dgSpecHash": "EtrQV+Bgwxv8JSYIFLLXCz9QiZBz86Koz9k4E8cVCqm4ALGYb2lECe0TDOKZ6A4Y9M2Ul21SYSENbkBr28q9Zg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\jasin\\Desktop\\BookStoreApp\\BookStoreApp.test\\BookStoreApp.test.csproj",
+  "projectFilePath": "C:\\Users\\jasin\\Desktop\\appVerOld\\BookStoreApp\\BookStoreApp.test\\BookStoreApp.test.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jasin\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\jasin\\.nuget\\packages\\microsoft.codecoverage\\17.1.0\\microsoft.codecoverage.17.1.0.nupkg.sha512",

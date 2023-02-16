@@ -59,7 +59,14 @@ namespace BookStoreApp
                 }
             }
 
-            return result.Remove(result.Length - 1);
+            if (result.Length > 1)
+            {
+                return result.Remove(result.Length - 1);
+            }
+            else
+            {
+                return result;
+            }
         }
         public static string ClearString(string s)
         {
