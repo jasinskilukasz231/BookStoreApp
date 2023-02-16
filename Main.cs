@@ -132,7 +132,23 @@ namespace BookStoreApp
                     if (customerAccountScreen.cartButtonPressed == true) 
                     {
                         customerAccountScreen.cartButtonPressed = false;
-                        cartScreen.CreateCartScreen(win_x, win_y);
+
+                        string customer_id = startingScreen.cutomer_id;
+                        string exisiting_id = Database.FindOneThing("SELECT id_book_in_cart FROM customers_preferences WHERE id_and_customer_id=" + customer_id);
+                        if(exisiting_id == null)
+                        {
+                            cartScreen.CreateCartScreen(null);
+                        }
+                        else
+                        {
+                            string[] ids = UtilitiesClass.RemoveSameNumbers(exisiting_id.Split(',')).Split(',');
+                            List<string> booksIds = new List<string>();
+                            foreach (var i in ids)
+                            {
+                                booksIds.Add(i);
+                            }
+                            cartScreen.CreateCartScreen(booksIds);
+                        } 
                         AddCartScreenItemsToControls();
                         whatToRender = 6;
                     }
@@ -159,7 +175,25 @@ namespace BookStoreApp
                             //if add to cart button is pressed
                             //add to booksIds
                             //check id of book that hides on certain button 
-                            cartScreen.GetBooksIdsInCartList().Add(customerAccountScreen.GetSinglePageBooksList()[customerAccountScreen.buttonNumber].bookId);
+                            string customer_id = startingScreen.cutomer_id;
+                            string findRecordQuery= "SELECT customers_preferences.id_and_customer_id FROM customers_data, customers_preferences WHERE " +
+                            "customers_preferences.id_and_customer_id = customers_data.id AND customers_data.id =" + customer_id;
+
+                            string id = (customerAccountScreen.GetSinglePageBooksList()[customerAccountScreen.buttonNumber].bookId).ToString() + ",";
+
+                            if (Database.FindOneThing(findRecordQuery) == null)
+                            {
+                                Database.InsertInto("INSERT INTO customers_preferences VALUES(" + UtilitiesClass.quoteSign + customer_id +
+                                UtilitiesClass.quoteSign + "," + UtilitiesClass.quoteSign + id + UtilitiesClass.quoteSign + ")");
+                            }
+                            else
+                            {
+                                string exisiting_id = Database.FindOneThing("SELECT id_book_in_cart FROM customers_preferences WHERE id_and_customer_id=" + customer_id);
+                                string united_id = UtilitiesClass.RemoveSameNumbers((exisiting_id + id).Split(','));
+                                Database.InsertInto("UPDATE customers_preferences SET id_book_in_cart=" + UtilitiesClass.quoteSign + united_id + UtilitiesClass.quoteSign +
+                               " WHERE id_and_customer_id=" + customer_id);
+                            }
+
                             customerAccountScreen.buttonNumber = 10;
                         }
                         MessageBox.Show("Book added to cart");
@@ -173,6 +207,45 @@ namespace BookStoreApp
                     if (cartScreen.orderButtonPressed == true)
                     {
                         cartScreen.orderButtonPressed = false;
+                    }
+                    if (cartScreen.removeBookButtonPressed == true)
+                    {
+                        cartScreen.removeBookButtonPressed = false;
+
+                        //works fine but leaves mess in record in database
+                        //leaves ",," after removing
+                        //it is being removed when cart screen is created
+
+                        if (cartScreen.GetTextBox().GetObject().Text != "")
+                        {
+                            string customer_id = startingScreen.cutomer_id;
+                            string findRecordQuery = "SELECT customers_preferences.id_and_customer_id FROM customers_data, customers_preferences WHERE " +
+                            "customers_preferences.id_and_customer_id = customers_data.id AND customers_data.id =" + customer_id;
+
+                            if (Database.FindOneThing(findRecordQuery) != null)
+                            {
+                                string exisiting_id = Database.FindOneThing("SELECT id_book_in_cart FROM customers_preferences WHERE id_and_customer_id=" + customer_id);
+                                string[] idList = exisiting_id.Split(',');
+                                List<string> newId = new List<string>();
+                                string newIdstring = "";
+                                for (int i = 0; i < idList.Length; i++)
+                                {
+                                    if ((i + 1).ToString() != cartScreen.GetTextBox().GetObject().Text)
+                                    {
+                                        newId.Add(idList[i]);
+                                        newIdstring += idList[i] + ",";
+                                    }
+                                }
+
+                                Database.InsertInto("UPDATE customers_preferences SET id_book_in_cart=" + UtilitiesClass.quoteSign + newIdstring + UtilitiesClass.quoteSign +
+                               " WHERE id_and_customer_id=" + customer_id);
+                                cartScreen.SetVisible(false);
+                                cartScreen.CreateCartScreen(newId);
+                                AddCartScreenItemsToControls();
+                                cartScreen.SetVisible(true);
+                            }
+                        }
+                        cartScreen.GetTextBox().GetObject().Text = "";
                     }
                     break;
             }
@@ -261,6 +334,7 @@ namespace BookStoreApp
             Controls.Add(singleBookScreen.GetPictureObject().GetObject());
 
             //cart screen
+            Controls.Add(cartScreen.GetTextBox().GetObject());
             foreach (var i in cartScreen.GetButtonList())
             {
                 Controls.Add(i.GetObject());

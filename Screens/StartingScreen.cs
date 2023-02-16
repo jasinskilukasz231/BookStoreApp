@@ -6,6 +6,7 @@ namespace BookStoreApp.Screens
 {
     public class StartingScreen
     {
+        public string cutomer_id { get; set; }
         public bool startingScreenRegisterButtonPressed { get; set; }
         public bool startingScreenStafLoginButtonPressed { get; set; }
         public bool logged = false;
@@ -127,9 +128,11 @@ namespace BookStoreApp.Screens
             string query = "SELECT id FROM customers_data WHERE login=" + UtilitiesClass.quoteSign + loginTextBox.GetObject().Text
                 + UtilitiesClass.quoteSign + " AND password=" + UtilitiesClass.quoteSign + passwordTextBox.GetObject().Text + UtilitiesClass.quoteSign;
 
-            if (Database.FindOneThing(query) != null)
+            string id = Database.FindOneThing(query);
+            if (id != null)
             {
                 logged = true;
+                cutomer_id = id;
             }
             else
             {
