@@ -2,7 +2,7 @@ using System.Windows.Forms;
 
 public class CheckBoxClass
 {
-    CheckBox cb;
+    private CheckBox cb;
 
     public CheckBox GetObject()
     {

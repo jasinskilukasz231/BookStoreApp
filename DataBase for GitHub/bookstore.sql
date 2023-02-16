@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 23 Sty 2023, 11:23
+-- Czas generowania: 03 Lut 2023, 16:05
 -- Wersja serwera: 10.4.24-MariaDB
 -- Wersja PHP: 8.1.6
 
@@ -30,20 +30,24 @@ SET time_zone = "+00:00";
 CREATE TABLE `books` (
   `id` int(11) NOT NULL,
   `title` text NOT NULL,
-  `year` date NOT NULL,
+  `displayTitle` text NOT NULL,
+  `autor` text NOT NULL,
+  `year` year(4) NOT NULL,
   `nr_pages` int(11) NOT NULL,
   `price` double NOT NULL,
-  `possible_to_loan` tinyint(1) NOT NULL
+  `possible_to_loan` tinyint(1) NOT NULL,
+  `booksAvailable` text NOT NULL,
+  `imageName` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Zrzut danych tabeli `books`
 --
 
-INSERT INTO `books` (`id`, `title`, `year`, `nr_pages`, `price`, `possible_to_loan`) VALUES
-(1, 'salems lot', '2018-10-17', 525, 10, 1),
-(2, 'the da vinci code', '2022-04-13', 592, 16.99, 1),
-(3, 'the godfather', '2022-11-09', 576, 12.49, 0);
+INSERT INTO `books` (`id`, `title`, `displayTitle`, `autor`, `year`, `nr_pages`, `price`, `possible_to_loan`, `booksAvailable`, `imageName`) VALUES
+(1, 'salems lot', 'Salem\'s Lot', 'Stephen King', 2018, 525, 10, 1, '2', 'salems_lot.png'),
+(2, 'the da vinci code', 'The Da Vinci Code', 'Dan Brown', 2022, 592, 16.99, 1, '1', 'the_davinci_code.png'),
+(3, 'the godfather', 'The Godfather', 'Mario Puzo', 2022, 576, 12.49, 0, '0', 'the_godfather.png');
 
 -- --------------------------------------------------------
 
@@ -109,7 +113,38 @@ INSERT INTO `customers_data` (`id`, `name`, `last_name`, `email`, `phone`, `addr
 (14, 'Jan', 'Kaczmarek', 'KaczkaDziwaczka@o2.pl', '123998291', 'Lipowa 13, 28-312 Oksa', 'Different', 'kaczor13', 'Komornik13'),
 (15, 'Genowefa', 'Pigwa', 'gienia@wp.pl', '332666221', 'Address gdzies tam', 'Different', 'Gienia997', 'Gienia997'),
 (16, 'Jennie', 'Kim', 'doukieJen@gmail.com', '112991992', 'Seoul, Sout Korea', 'Woman', 'Manduu2291', 'LoveJennie112'),
-(17, 'Jennie', 'Kim', 'JennieLove@gmail.com', '112991992', 'Seoul, Sout Korea', 'Woman', 'IamJennie221', 'LoveJennie112');
+(17, 'Jennie', 'Kim', 'JennieLove@gmail.com', '112991992', 'Seoul, Sout Korea', 'Woman', 'IamJennie221', 'LoveJennie112'),
+(18, 'Emilia', 'Jasińska', 'gdyuyyg@gmail.com', '556222583', 'warszawa', 'Woman', 'emiliajasinska', 'zupa123'),
+(19, 'Emilia', 'Jasińska', 'gdyuyyg@gmail.com', '556222583', 'warszawa', 'Woman', 'emiliajasinska80', 'zupa123'),
+(20, 'Emilia', 'Jasińska', 'gdyuyyg@gmail.com', '556222583', 'warszawa', 'Woman', 'emilia80', 'zupa123'),
+(21, 'Emilia', 'Jasińska', 'gdyuyyg@gmail.com', '556222583', 'warszawa', 'Woman', 'emilia80_', 'zupa123'),
+(22, 'Karolina', 'Nowak', 'nowak420@wp.pl', '666666991', 'Gdansk, jakas ulica', 'Woman', 'Karolina', 'haslo'),
+(23, 'Karolina', 'Nowak', 'nowak420@wp.pl', '666666991', 'Gdansk, jakas ulica', 'Woman', 'Karolina123', 'Haslo123'),
+(24, 'Karol', 'Krawczyk', 'karolKrawczyk@gmail.com', '339200291', 'Wolska 12/33 Warszawa', 'Man', 'Karol123', 'Karolek123'),
+(25, 'Jaś', 'Kapela', 'email@wp.pl', '123456786', 'gdzies tam', 'Other', 'logintaki1234', 'haselkoo'),
+(26, 'Tymek', 'Kocioł', 'emila@gmail.com', '123123123', 'Trzciniec', 'Man', 'emilia801', 'hasloJakies'),
+(27, 'Thomas', 'Smith', 'smithTHomas@gmail.com', '229118821', 'Wisconsin', 'Man', 'Janek1234', 'HasloMaslo123'),
+(28, 'Thomas', 'Smith', 'smithTHomas@gmail.com', '229118821', 'Wisconsin', 'Man', 'Janek123411', 'HasloMaslo123'),
+(29, 'Konrad', 'Paweł', 'kondzio@o2.pl', '228918920', 'Address Moj jakis', 'Other', 'Janek123342', 'Ladowarka123'),
+(30, 'Martha', 'Smith', 'myEmail23@o2.pl', '112221221', 'Tokio', 'Man', 'kaczor1312', 'MyPassword123'),
+(31, 'asdasd', 'asdasd', 'asdasd', 'asdasd', 'asdasd', 'Man', 'asdasdasd', 'asdasd'),
+(32, 'asdad', 'asdasd', 'asdasd', 'asdasd', 'asdasd', 'Man', 'asdasd', 'asdasda'),
+(33, 'sda', 'asd', 'asdasd', 'asd', 'asdasd', 'Man', 'sebastianeek121', 'asdasdasd'),
+(34, 'Kazimierz', 'Polski', 'polak@yahoo.com', '229919229', 'Kobierzyn 13/5', 'Other', 'Kazik12', 'PolakToJa123'),
+(35, 'Paweł', 'Kaczmarek', 'pawelek23@wp.pl', '229918339', 'Jana Pawła 3/5 28-362 Nagłowice', 'Man', 'pawełGaweł123', 'Drzewo123'),
+(36, 'Kacper', 'Mularczyk', 'Kacpi90@gmail.com', '992991882', 'Sosnowiec', 'Man', 'kackij123', 'Mularczyk992');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `customers_preferences`
+--
+
+CREATE TABLE `customers_preferences` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `id_book_in_cart` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -200,6 +235,12 @@ ALTER TABLE `customers_data`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeksy dla tabeli `customers_preferences`
+--
+ALTER TABLE `customers_preferences`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indeksy dla tabeli `loans`
 --
 ALTER TABLE `loans`
@@ -237,7 +278,13 @@ ALTER TABLE `books_tags`
 -- AUTO_INCREMENT dla tabeli `customers_data`
 --
 ALTER TABLE `customers_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
+--
+-- AUTO_INCREMENT dla tabeli `customers_preferences`
+--
+ALTER TABLE `customers_preferences`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `loans`

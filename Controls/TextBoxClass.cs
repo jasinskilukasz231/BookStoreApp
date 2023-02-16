@@ -2,7 +2,7 @@ using System.Windows.Forms;
 
 public class TextBoxClass
 {
-    TextBox tb;
+    private TextBox tb;
 
     public TextBox GetObject()
     {

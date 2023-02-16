@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace BookStoreApp.Screens
 {
-    internal class SettingsScreen
+    public class SettingsScreen
     {
+
+        public SettingsScreen(int win_x, int win_y)
+        {
+
+        }
+        public void SetVisible(bool value)
+        {
+
+        }
     }
 }

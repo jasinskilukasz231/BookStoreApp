@@ -4,7 +4,7 @@ namespace BookStoreApp
 {
     public class SingleBook
     {
-        public int bookId = 0;
+        public int bookId { get; set; }
         public ButtonClass button { get; set; }
         public LabelClass title { get; set; }
         public LabelClass price { get; set; }

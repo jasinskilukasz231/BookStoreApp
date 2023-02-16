@@ -2,7 +2,7 @@ using System.Windows.Forms;
 
 public class LabelClass
 {
-    Label label;
+    private Label label;
 
     public Label GetObject()
     {

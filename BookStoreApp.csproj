@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Controls\ButtonClass.cs" />
     <Compile Include="Controls\CheckBoxClass.cs" />
+    <Compile Include="Controls\PictureBoxCLass.cs" />
     <Compile Include="Screens\CartScreen.cs" />
     <Compile Include="Screens\SingleBookScreen.cs" />
     <Compile Include="Database.cs" />
